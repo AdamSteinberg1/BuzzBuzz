@@ -1,5 +1,5 @@
 /*
-  Blink
+  Blink Test
 
   Turns an LED on for one second, then off for one second, repeatedly.
   http://www.arduino.cc/en/Tutorial/Blink
