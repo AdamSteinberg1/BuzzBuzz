@@ -15,6 +15,9 @@
    should have been included with this software.
 
    This software is not intended for medical use.
+   Red positive wire
+   brown negative wire
+   orange signal wire
 */
 
 /*
@@ -52,9 +55,9 @@ const int OUTPUT_TYPE = SERIAL_PLOTTER;
       pin 9 or 10, because those pins' PWM interferes with the sample timer.
 */
 const int PULSE_INPUT = A0;
-const int PULSE_BLINK = 13;    // Pin 13 is the on-board LED
-const int PULSE_FADE = 5;
-const int THRESHOLD = 550;   // Adjust this number to avoid noise when idle
+const int PULSE_BLINK = 2;    // Pin 2 is the on-board LED
+//const int PULSE_FADE = 5;
+const int THRESHOLD = 6000;   // Adjust this number to avoid noise when idle
 
 /*
    All the PulseSensor Playground functions.
@@ -77,7 +80,7 @@ void setup() {
 
   pulseSensor.analogInput(PULSE_INPUT);
   pulseSensor.blinkOnPulse(PULSE_BLINK);
-  pulseSensor.fadeOnPulse(PULSE_FADE);
+  //pulseSensor.fadeOnPulse(PULSE_FADE);
 
   pulseSensor.setSerial(Serial);
   pulseSensor.setOutputType(OUTPUT_TYPE);
