@@ -18,6 +18,9 @@
 6) "Human-readable" code that is newbie friendly."
 
 */
+#define BSIZE 500
+float buf[BSIZE];
+int bPos = 0;
 
 
 //  Variables
@@ -26,7 +29,24 @@ int LED13 = 2;   //  The on-board Arduion LED
 
 
 int Signal;                // holds the incoming raw data. Signal value can range from 0-1024
-int Threshold = 1000;            // Determine which Signal to "count as a beat", and which to ingore.
+int Threshold = 3000;            // Determine which Signal to "count as a beat", and which to ingore.
+
+
+float boxcarFilter(int val)
+{
+  buf[bPos] = (float) val;
+  bPos++;
+  if (bPos >= BSIZE)
+  {
+    bPos = 0;
+  }
+  float average = 0.0f;
+  for (int i = 0; i < BSIZE; i++)
+  {
+    average += buf[i];
+  }
+  return float(val) - average / float(BSIZE);
+}
 
 
 // The SetUp Function:
