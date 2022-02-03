@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 class OptionsRoute extends StatefulWidget {
   const OptionsRoute({Key? key}) : super(key: key);
-
+  //String _modeDropDown='Buzz Mode';
+  //String get _modeDropDown => _modeDropDown;
   @override
   _OptionsRoute createState() => _OptionsRoute();
 }
-class _OptionsRoute extends State<OptionsRoute> {
+class _OptionsRoute extends State<OptionsRoute> with AutomaticKeepAliveClientMixin{
 
   // Initial Selected Values
-  String modeDropDown = 'Buzz Mode';
+  String? modeDropDown;// = 'Buzz Mode';
   String intensityDropDown = 'Buzz Intensity';
   String notificationsDropDown = 'Notifications';
 
@@ -43,7 +44,10 @@ class _OptionsRoute extends State<OptionsRoute> {
           children: [
             DropdownButton(
               // Initial Value
-              value: modeDropDown,
+              hint: modeDropDown == null
+                  ? Text('BuzzMode')
+                  : Text(modeDropDown!),
+              //value: modeDropDown,
               // Down Arrow Icon
               icon: const Icon(Icons.keyboard_arrow_down),
               // Array list of items
@@ -101,9 +105,18 @@ class _OptionsRoute extends State<OptionsRoute> {
                 });
               },
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('go home'),
+            ),
           ],
         ),
       ),
     );
-  }
+  } //Widget
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
+
