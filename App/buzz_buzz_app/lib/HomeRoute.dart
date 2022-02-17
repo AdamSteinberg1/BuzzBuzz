@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:buzz_buzz_app/TextSection.dart';
+import 'package:buzz_buzz_app/ColorBox.dart';
+import 'package:buzz_buzz_app/HomeRow.dart';
 
 class HomeRoute extends StatelessWidget {
   const HomeRoute({Key? key}) : super(key: key);
@@ -12,8 +15,16 @@ class HomeRoute extends StatelessWidget {
       ),
       body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              ColorBox('Insert Graph',Colors.lightBlue),
+              ElevatedButton(
+                child: Text('See More Data'),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/c');
+                },
+              ),
+              const HomeRow(),
               ElevatedButton(
                 child: Text('Pair Device'),
                 onPressed: () {
@@ -21,21 +32,9 @@ class HomeRoute extends StatelessWidget {
                 },
               ),
               ElevatedButton(
-                child: Text('See More Data'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/c');
-                },
-              ),
-              ElevatedButton(
                 child: Text('Go to Options'),
                 onPressed: () {
                   Navigator.pushNamed(context, '/d');
-                },
-              ),
-              ElevatedButton(
-                child: Text('Go to Guided Breathing'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/e');
                 },
               ),
             ],

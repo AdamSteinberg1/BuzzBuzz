@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+
+
 class OptionsRoute extends StatefulWidget {
   const OptionsRoute({Key? key}) : super(key: key);
   @override
@@ -7,10 +10,9 @@ class OptionsRoute extends StatefulWidget {
 class _OptionsRoute extends State<OptionsRoute>{
 
   // Initial Selected Values
-  String? modeDropDown = 'Buzz Mode';
-  String intensityDropDown = 'Buzz Intensity';
-  String notificationsDropDown = 'Notifications';
-
+  static String modeDropDown = 'Buzz Mode';
+  static String intensityDropDown = 'Buzz Intensity';
+  static String notificationsDropDown = 'Notifications';
   // List of items in our dropdown menu
   var buzzModes = <String>[
     'Buzz Mode',
@@ -41,10 +43,7 @@ class _OptionsRoute extends State<OptionsRoute>{
           mainAxisAlignment:  MainAxisAlignment.center,
           children: [
             DropdownButton(
-              // Initial Value
-              //hint: modeDropDown == null
-              //    ? Text('BuzzMode')
-              //    : Text(modeDropDown!),
+              //Initial Value
               value: modeDropDown,
               // Down Arrow Icon
               icon: const Icon(Icons.keyboard_arrow_down),
