@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class BluetoothRoute extends StatelessWidget {
   const BluetoothRoute({Key? key}) : super(key: key);
 
@@ -9,14 +10,22 @@ class BluetoothRoute extends StatelessWidget {
         title: const Text('Pair Bluetooth'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('go home'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children:[
+            CircularProgressIndicator(),
+            SizedBox(height: 20.0),
+            ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('go home'),
+          ),
+        ]
         ),
+      )
 
-      ),
     );
   }
 }

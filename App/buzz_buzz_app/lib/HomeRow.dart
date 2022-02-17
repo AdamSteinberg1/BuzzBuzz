@@ -20,13 +20,13 @@ class _HomeRow extends State<HomeRow> {
           Container(
             margin: EdgeInsets.all(20),
             child: ElevatedButton(
-                child: Text('Go to Guided Breathing'),
+                child: Text('Guided Breathing'),
                 onPressed: () {
                   Navigator.pushNamed(context, '/e');
                 },
               )
           ),
-          SizedBox(width:50.0),
+          SizedBox(width:20.0),
           Column(
             children: [
               Text('Do Not Disturb'),
