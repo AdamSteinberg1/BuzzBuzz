@@ -35,9 +35,9 @@ const int LED = 2; // Could be different depending on the dev board. I used the 
 // See the following for generating UUIDs:
 // https://www.uuidgenerator.net/
 
-#define SERVICE_UUID           "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" // UART service UUID
-#define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
-#define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+#define SERVICE_UUID           "1e59dab1-c4fe-4677-a1f6-cfdb019ef97a" // UART service UUID
+#define CHARACTERISTIC_UUID_RX "61bf8498-7093-491d-9dae-ca72e168dfc1"
+#define CHARACTERISTIC_UUID_TX "06376531-2685-412a-8af0-a5af8b139866"
 
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
@@ -120,7 +120,7 @@ void setup() {
 void loop() {
   if (deviceConnected) {
     // Fabricate some arbitrary junk for now...
-    txValue = analogRead(readPin) / 3.456; // This could be an actual sensor reading!
+    txValue++;
 
     // Let's convert the value to a char array:
     char txString[8]; // make sure this is big enuffz
