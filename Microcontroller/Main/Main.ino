@@ -1,9 +1,6 @@
 //This the code to run all of the stuff at once
 
 //libraries
-#include <Adafruit_MPU6050.h>
-#include <Adafruit_Sensor.h>
-#include <Wire.h>
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
@@ -28,10 +25,13 @@ BLECharacteristic *heartCharacteristic;
 class MyServerCallbacks: public BLEServerCallbacks {
   void onConnect(BLEServer* pServer) {
     vTaskResume(heartHandle);
+    Serial.println("Connect!");
   };
 
   void onDisconnect(BLEServer* pServer) {
     vTaskSuspend(heartHandle);
+    Serial.println("Disconnect :(");
+    BLEDevice::startAdvertising();
   }
 };
 
@@ -42,7 +42,7 @@ void setup() {
   pinMode(HEART_PIN, INPUT);   //ppg sensor
 
   //create tasks and immediately suspend them
-  xTaskCreate(sendHeartrate, "Send Heartrate", 1000, NULL, 1, &heartHandle);
+  xTaskCreate(sendHeartrate, "Send Heartrate", 8000, NULL, 1, &heartHandle);
   vTaskSuspend(heartHandle); 
 
 
@@ -77,8 +77,12 @@ void setup() {
   pService->start();
 
 
-  // Start advertising
-  pServer->getAdvertising()->start();
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(true);
+  pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
+  pAdvertising->setMinPreferred(0x12);
+  BLEDevice::startAdvertising();
 }
 
 void loop() {}

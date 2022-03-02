@@ -25,8 +25,6 @@ float heartrate()
   static int num_samples = 0;    //number of samples since last heartbeat 
   static float heartrate =0;
   static float lastVal=0;
-  Serial.print(threshold);
-  Serial.print("\t");
 
   num_samples++;
   if(val >= threshold && lastVal < threshold)
@@ -47,10 +45,17 @@ float heartrate()
 
 void sendHeartrate(void * parameter)
 {  
+  float lastHr = 0;
   for(;;) //infinite loop
   { 
-    auto hr = heartrate();
-        
+    float hr = heartrate();
+    if(hr!=lastHr)
+    {
+      lastHr=hr;
+      heartCharacteristic->setValue(hr);
+      heartCharacteristic->notify();
+      Serial.println(hr);
+    }
     vTaskDelay(PPG_SAMPLING_PERIOD / portTICK_PERIOD_MS);
   }
 }
