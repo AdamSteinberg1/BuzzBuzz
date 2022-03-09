@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 
 
@@ -11,8 +13,7 @@ class _OptionsRoute extends State<OptionsRoute>{
 
   // Initial Selected Values
   static String modeDropDown = 'Buzz Mode';
-  static String intensityDropDown = 'Buzz Intensity';
-  static String notificationsDropDown = 'Notifications';
+  //static String intensityDropDown = 'Buzz Intensity';
   // List of items in our dropdown menu
   var buzzModes = <String>[
     'Buzz Mode',
@@ -20,18 +21,51 @@ class _OptionsRoute extends State<OptionsRoute>{
     'False Heart Rate Gradual',
     'Breathing Guide',
   ];
-  var intensities = [
+  /*var intensities = [
     'Buzz Intensity',
     'Low intensity',
     'Moderate intensity',
     'High intensity',
-  ];
-  var notifications = [
-    'Notifications',
-    'All notifications',
-    'Only detected anxiety notifications',
-    'No notifications',
-  ];
+  ];*/
+  Future<String> getLocalPath() async{
+    var dir = await getApplicationDocumentsDirectory();
+    return dir.path;
+  }
+
+  Future<File> getLocalFile() async{
+    String path = await getLocalPath();
+    return File('$path/OptionsData.txt');
+  }
+
+  Future<File> writeOptions(String s) async{
+    File file = await getLocalFile();
+    return file.writeAsString(s);
+  }
+  Future<String> readOptions() async{
+    try{
+      final file= await getLocalFile();
+      String contents = await file.readAsString();
+      return contents;
+    }catch(e){
+      return "Null";
+    }
+  }
+   //example of file read
+  @override
+  void initState() {
+    super.initState();
+    readOptions().then((data){
+      setState((){
+        buzzModes.forEach((buzzmode) {
+          if(data == buzzmode) {
+            modeDropDown = buzzmode;
+            print('Buzz mode read in');
+          }
+        });
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,9 +94,10 @@ class _OptionsRoute extends State<OptionsRoute>{
                 setState(() {
                   modeDropDown = newValue!;
                 });
+                writeOptions(modeDropDown);
               },
             ),
-            DropdownButton(
+            /*DropdownButton(
               // Initial Value
               value: intensityDropDown,
               // Down Arrow Icon
@@ -81,27 +116,7 @@ class _OptionsRoute extends State<OptionsRoute>{
                   intensityDropDown = newValue!;
                 });
               },
-            ),
-            DropdownButton(
-              // Initial Value
-              value: notificationsDropDown,
-              // Down Arrow Icon
-              icon: const Icon(Icons.keyboard_arrow_down),
-              // Array list of items
-              items: notifications.map((String value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              // After selecting the desired option,it will
-              // change button value to selected value
-              onChanged: (String? newValue) {
-                setState(() {
-                  notificationsDropDown = newValue!;
-                });
-              },
-            ),
+            ), */
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
