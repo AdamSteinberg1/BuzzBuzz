@@ -71,7 +71,8 @@ class FindDevicesScreen extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () =>
-            FlutterBlue.instance.startScan(timeout: const Duration(seconds: 4)),
+            //only scan for devices that have the service of the BuzzBuzz Bracelet
+            FlutterBlue.instance.startScan(timeout: const Duration(seconds: 4), withServices: [Guid("c747d8bf-7ebb-4496-849c-423df0faa334")]),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -141,7 +142,9 @@ class FindDevicesScreen extends StatelessWidget {
             return FloatingActionButton(
                 child: const Icon(Icons.search),
                 onPressed: () => FlutterBlue.instance
-                    .startScan(timeout: const Duration(seconds: 4)));
+                    //only scan for devices that have the service of the BuzzBuzz Bracelet
+                    .startScan(timeout: const Duration(seconds: 4), withServices: [Guid("c747d8bf-7ebb-4496-849c-423df0faa334")])
+            );
           }
         },
       ),
