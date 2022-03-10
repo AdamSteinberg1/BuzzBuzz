@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:buzz_buzz_app/TextSection.dart';
 import 'package:buzz_buzz_app/ColorBox.dart';
 import 'package:buzz_buzz_app/HomeRow.dart';
+import 'package:buzz_buzz_app/bpmGraphic.dart';
 
 class HomeRoute extends StatelessWidget {
   const HomeRoute({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,11 +13,12 @@ class HomeRoute extends StatelessWidget {
         title: const Text('Home Screen'),
         backgroundColor: Colors.lightBlue,
       ),
-      body: Center(
+      body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              ColorBox('Insert Graph',Colors.lightBlue),
+              bpmGraphic(),
+              //ColorBox('Insert Graph',Colors.lightBlue),
               ElevatedButton(
                 child: Text('See More Data'),
                 onPressed: () {
