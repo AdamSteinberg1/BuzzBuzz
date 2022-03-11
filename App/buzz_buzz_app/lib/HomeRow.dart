@@ -19,12 +19,37 @@ class _HomeRow extends State<HomeRow> {
         children: [
           Container(
             margin: EdgeInsets.all(20),
-            child: ElevatedButton(
-                child: Text('Guided Breathing'),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/e');
-                },
-              )
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xFF0D47A1),
+                            Color(0xFF1976D2),
+                            Color(0xFF42A5F5),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.all(16.0),
+                      primary: Colors.white,
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/e');
+                    },
+                    child: const Text('Guided Breathing'),
+                  ),
+                ],
+              ),
+            ),
           ),
           SizedBox(width:20.0),
           Column(
@@ -36,6 +61,7 @@ class _HomeRow extends State<HomeRow> {
                 },
                 rollingInfoRight: const RollingIconInfo(
                   icon: Icons.alarm_off,
+                  backgroundColor: Colors.lightBlue,
                   text: Text('On'),
                 ),
                 rollingInfoLeft: const RollingIconInfo(
