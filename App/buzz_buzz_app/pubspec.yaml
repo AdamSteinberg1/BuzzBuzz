@@ -38,10 +38,10 @@ dependencies:
   english_words: ^4.0.0
   rolling_switch: ^0.0.2
   path_provider: ^2.0.9
-  flutter_blue: ^0.8.0
   graphic: ^0.9.1
   charts_flutter: ^0.12.0
   syncfusion_flutter_gauges: ^19.4.55
+  flutter_blue_plus: ^1.1.2
 
 dev_dependencies:
   flutter_test:
