@@ -11,7 +11,7 @@ class bpmGraphic extends StatefulWidget {
 }
 class _bpmGraphic extends State<bpmGraphic>{
 
-  double bpm=120;
+  double bpm=190;
   final _colors = <Color>[Colors.lightBlue];
   final _colorLengths = <double>[1];
   Color bpmTextColor=Colors.blue;
@@ -45,7 +45,7 @@ class _bpmGraphic extends State<bpmGraphic>{
     super.initState();
     readOptions().then((data){
       setState((){
-        bpm=data as double;
+        bpm=double.parse('$data');
         /*if(bpm>40)
           {
             _colors.add(Colors.green);
@@ -70,29 +70,35 @@ class _bpmGraphic extends State<bpmGraphic>{
     //now that we have updated bpm we build the list of gradients
   void fillColors() {
         print("colors being filled");
+        _colors.clear();
+        _colors.add(Colors.blue);
         if(bpm>40)
         {
           _colors.add(Colors.green);
           _colorLengths.clear();
           _colorLengths.addAll({.5,1});
+          bpmTextColor=Colors.green;
         }
         if(bpm>80)
         {
           _colors.add(Colors.yellow);
           _colorLengths.clear();
           _colorLengths.addAll({.333,.666,1});
+          bpmTextColor=Colors.yellow;
         }
         if(bpm>100)
         {
           _colors.add(Colors.orange);
           _colorLengths.clear();
           _colorLengths.addAll({.25,.5,.75,1});
+          bpmTextColor=Colors.orange;
         }
         if(bpm>150)
         {
           _colors.add(Colors.red);
           _colorLengths.clear();
           _colorLengths.addAll({.2,.4,.6,.8,1});
+          bpmTextColor=Colors.red;
         }
   }
 
@@ -112,61 +118,13 @@ class _bpmGraphic extends State<bpmGraphic>{
                   minimum: 0,
                   maximum: 200,
                   interval: 20,
-
                     //60-80 green 40-60 blue 80-100 yellow 100 red gradient 200 black
-                  /*ranges: <GaugeRange>[
-                    GaugeRange(
-                      startValue: 0,
-                      endValue: bpm,
-                      gradient: const SweepGradient(
-                          colors: <Color>[Colors.blueAccent, Colors.green],
-                          stops: <double>[0.25, 0.75]
-                      ),
-                      startWidth: 50,
-                      endWidth: 50,
-                    ),*/
-                    /*GaugeRange(
-                      startValue: 0,
-                      endValue: 60,
-                      color: Colors.blueAccent,
-                      startWidth: 50,
-                      endWidth: 50,
-                    ),
-                    GaugeRange(
-                        startValue: 60,
-                        endValue: 80,
-                        color: Colors.green,
-                        startWidth: 50,
-                        endWidth: 50,
-                    ),
-                    GaugeRange(
-                        startValue: 80,
-                        endValue: 100,
-                        color: Colors.yellow,
-                        startWidth: 50,
-                        endWidth: 50,
-                    ),
-                    GaugeRange(
-                        startValue: 100,
-                        endValue: 150,
-                        color: Colors.orange,
-                        startWidth: 50,
-                        endWidth: 50,
-                    ),
-                    GaugeRange(
-                        startValue: 150,
-                        endValue: 200,
-                        color: Colors.red,
-                        startWidth: 50,
-                        endWidth: 50,
-                    )*/
-                  //],
                   pointers: <GaugePointer>[
                     RangePointer(
                       value: bpm, width: 0.3, sizeUnit: GaugeSizeUnit.factor,
                       gradient: SweepGradient(
                           colors: _colors,
-                          //stops: _colorLengths
+                          stops: _colorLengths
                       ),
                       //value: bpm,
                       enableAnimation: true
@@ -174,9 +132,10 @@ class _bpmGraphic extends State<bpmGraphic>{
                   ],
                   annotations: <GaugeAnnotation>[
                     GaugeAnnotation(
-                      widget: Text('$bpm', style:TextStyle(color: Colors.green, fontSize: 40,fontWeight: FontWeight.bold)),
-                      horizontalAlignment: GaugeAlignment.near,
+                      widget: Text('$bpm', style:TextStyle(color: bpmTextColor, fontSize: 40,fontWeight: FontWeight.bold)),
+                      //horizontalAlignment: GaugeAlignment.near,
                       verticalAlignment: GaugeAlignment.center,
+                      positionFactor:.15,
                       //angle: 90
                     )
                   ]
