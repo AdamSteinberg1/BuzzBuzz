@@ -1,3 +1,4 @@
+import 'package:buzz_buzz_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -11,7 +12,6 @@ class bpmGraphic extends StatefulWidget {
 }
 class _bpmGraphic extends State<bpmGraphic>{
 
-  double bpm=190;
   final _colors = <Color>[Colors.lightBlue];
   final _colorLengths = <double>[1];
   Color bpmTextColor=Colors.blue;
@@ -45,7 +45,7 @@ class _bpmGraphic extends State<bpmGraphic>{
     super.initState();
     readOptions().then((data){
       setState((){
-        bpm=double.parse('$data');
+        //bpm=double.parse('$data');
         /*if(bpm>40)
           {
             _colors.add(Colors.green);
@@ -68,7 +68,7 @@ class _bpmGraphic extends State<bpmGraphic>{
     }
 
     //now that we have updated bpm we build the list of gradients
-  void fillColors() {
+  void fillColors(double bpm) {
         print("colors being filled");
         _colors.clear();
         _colors.add(Colors.blue);
@@ -106,43 +106,45 @@ class _bpmGraphic extends State<bpmGraphic>{
 
   @override
   Widget build(BuildContext context) {
-    fillColors();
     print("colors in _colors are: $_colors");
     return SafeArea(
-        child: Column(
-          children: <Widget>[
-            SfRadialGauge(
-              axes: <RadialAxis>[
-                RadialAxis(
-                  axisLineStyle: AxisLineStyle(thickness: 0.3,thicknessUnit: GaugeSizeUnit.factor),
-                  minimum: 0,
-                  maximum: 200,
-                  interval: 20,
-                    //60-80 green 40-60 blue 80-100 yellow 100 red gradient 200 black
-                  pointers: <GaugePointer>[
-                    RangePointer(
-                      value: bpm, width: 0.3, sizeUnit: GaugeSizeUnit.factor,
-                      gradient: SweepGradient(
-                          colors: _colors,
-                          stops: _colorLengths
-                      ),
-                      //value: bpm,
-                      enableAnimation: true
-                    )
-                  ],
-                  annotations: <GaugeAnnotation>[
-                    GaugeAnnotation(
-                      widget: Text('$bpm', style:TextStyle(color: bpmTextColor, fontSize: 40,fontWeight: FontWeight.bold)),
-                      //horizontalAlignment: GaugeAlignment.near,
-                      verticalAlignment: GaugeAlignment.center,
-                      positionFactor:.15,
-                      //angle: 90
-                    )
-                  ]
-                )
-              ]
-            ),
-        ]
+        child: StreamBuilder<double>(
+          stream: bioData.heartRateStream(),
+          builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
+            double bpm = snapshot.data ?? 0.0;
+            fillColors(bpm);
+            return SfRadialGauge(
+                axes: <RadialAxis>[
+                  RadialAxis(
+                      axisLineStyle: AxisLineStyle(thickness: 0.3,thicknessUnit: GaugeSizeUnit.factor),
+                      minimum: 0,
+                      maximum: 200,
+                      interval: 20,
+                      //60-80 green 40-60 blue 80-100 yellow 100 red gradient 200 black
+                      pointers: <GaugePointer>[
+                        RangePointer(
+                            value: bpm, width: 0.3, sizeUnit: GaugeSizeUnit.factor,
+                            gradient: SweepGradient(
+                                colors: _colors,
+                                stops: _colorLengths
+                            ),
+                            //value: bpm,
+                            enableAnimation: true
+                        )
+                      ],
+                      annotations: <GaugeAnnotation>[
+                        GaugeAnnotation(
+                          widget: Text(bpm.toStringAsFixed(2), style:TextStyle(color: bpmTextColor, fontSize: 40,fontWeight: FontWeight.bold)),
+                          //horizontalAlignment: GaugeAlignment.near,
+                          verticalAlignment: GaugeAlignment.center,
+                          positionFactor:.15,
+                          //angle: 90
+                        )
+                      ]
+                  )
+                ]
+            );
+          },
         )
     );
   }

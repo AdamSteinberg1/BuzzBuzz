@@ -62,6 +62,7 @@ class BioData {
         _device!.state
             .map((state) => state == BluetoothDeviceState.connected)
     );
+    _setupCharacteristics();
   }
 
   Stream<bool> deviceConnected() {
@@ -79,10 +80,12 @@ class BioData {
         switch(characteristic.uuid.toString()) {
           case _heartCharacteristicUUID: {
             _heartCharacteristic = characteristic;
+            _heartCharacteristic!.setNotifyValue(true);
           }
           break;
           case _touchCharacteristicUUID: {
             _touchCharacteristic = characteristic;
+            _touchCharacteristic!.setNotifyValue(true);
           }
           break;
           case _motorCharacteristicUUID: {
@@ -96,9 +99,7 @@ class BioData {
 
   Stream<double>? heartRateStream() {
     return _heartCharacteristic?.value.map((data) {
-      final Uint8List bytes = Uint8List.fromList(data);
-      final ByteData byteData = ByteData.sublistView(bytes);
-      return byteData.getFloat32(0);
+      return ByteData.sublistView(Uint8List.fromList(data)).getFloat32(0, Endian.little);
     });
   }
 
