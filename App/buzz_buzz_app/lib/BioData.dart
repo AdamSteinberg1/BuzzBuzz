@@ -26,6 +26,7 @@ class BioData {
       for (BluetoothDevice device in connectedDevices) {
         device.discoverServices().then((List<BluetoothService> services) {
           if(services.any((element) => element.uuid.toString() == _serviceUUID)) {
+            _isConnectedController.sink.add(true);
             _setDevice(device);
           }
         });
@@ -37,7 +38,6 @@ class BioData {
   }
 
   void isConnectedListener(bool event) {
-    //if the device ever is not connected
     _isConnected=event;
   }
 
@@ -98,13 +98,13 @@ class BioData {
 
 
   Stream<double>? heartRateStream() {
-    return _heartCharacteristic?.value.map((data) {
+    return _heartCharacteristic?.value.asBroadcastStream().map((data) {
       return ByteData.sublistView(Uint8List.fromList(data)).getFloat32(0, Endian.little);
     });
   }
 
   Stream<bool>? touchedStream() {
-    return _touchCharacteristic?.value.map((data) {
+    return _touchCharacteristic?.value.asBroadcastStream().map((data) {
       for(int i in data) {
         if(i != 0) {
           return true;

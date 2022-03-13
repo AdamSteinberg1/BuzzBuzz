@@ -108,43 +108,61 @@ class _bpmGraphic extends State<bpmGraphic>{
   Widget build(BuildContext context) {
     print("colors in _colors are: $_colors");
     return SafeArea(
-        child: StreamBuilder<double>(
-          stream: bioData.heartRateStream(),
-          builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-            double bpm = snapshot.data ?? 0.0;
-            fillColors(bpm);
-            return SfRadialGauge(
-                axes: <RadialAxis>[
-                  RadialAxis(
-                      axisLineStyle: AxisLineStyle(thickness: 0.3,thicknessUnit: GaugeSizeUnit.factor),
-                      minimum: 0,
-                      maximum: 200,
-                      interval: 20,
-                      //60-80 green 40-60 blue 80-100 yellow 100 red gradient 200 black
-                      pointers: <GaugePointer>[
-                        RangePointer(
-                            value: bpm, width: 0.3, sizeUnit: GaugeSizeUnit.factor,
-                            gradient: SweepGradient(
-                                colors: _colors,
-                                stops: _colorLengths
-                            ),
-                            //value: bpm,
-                            enableAnimation: true
-                        )
-                      ],
-                      annotations: <GaugeAnnotation>[
-                        GaugeAnnotation(
-                          widget: Text(bpm.toStringAsFixed(2), style:TextStyle(color: bpmTextColor, fontSize: 40,fontWeight: FontWeight.bold)),
-                          //horizontalAlignment: GaugeAlignment.near,
-                          verticalAlignment: GaugeAlignment.center,
-                          positionFactor:.15,
-                          //angle: 90
+        child: StreamBuilder<bool>(
+          initialData: bioData.currentlyConnected(),
+          stream: bioData.deviceConnected(),
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            if (snapshot.data ?? false) {
+              return StreamBuilder<double>(
+                stream: bioData.heartRateStream(),
+                builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
+                  double bpm = snapshot.data ?? 0.0;
+                  fillColors(bpm);
+                  return SfRadialGauge(
+                      axes: <RadialAxis>[
+                        RadialAxis(
+                            axisLineStyle: const AxisLineStyle(thickness: 0.3,
+                                thicknessUnit: GaugeSizeUnit.factor),
+                            minimum: 0,
+                            maximum: 200,
+                            interval: 20,
+                            //60-80 green 40-60 blue 80-100 yellow 100 red gradient 200 black
+                            pointers: <GaugePointer>[
+                              RangePointer(
+                                  value: bpm,
+                                  width: 0.3,
+                                  sizeUnit: GaugeSizeUnit.factor,
+                                  gradient: SweepGradient(
+                                      colors: _colors,
+                                      stops: _colorLengths
+                                  ),
+                                  //value: bpm,
+                                  enableAnimation: true
+                              )
+                            ],
+                            annotations: <GaugeAnnotation>[
+                              GaugeAnnotation(
+                                widget: Text(bpm.toStringAsFixed(2),
+                                    style: TextStyle(color: bpmTextColor,
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.bold)),
+                                //horizontalAlignment: GaugeAlignment.near,
+                                verticalAlignment: GaugeAlignment.center,
+                                positionFactor: .15,
+                                //angle: 90
+                              )
+                            ]
                         )
                       ]
-                  )
-                ]
-            );
-          },
+                  );
+                },
+              );
+            } else {
+              return const Expanded(
+                  child: Icon(Icons.bluetooth_disabled)
+              );
+            }
+          }
         )
     );
   }
