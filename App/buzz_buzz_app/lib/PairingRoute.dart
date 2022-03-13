@@ -66,8 +66,19 @@ class Connected extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-        child: Text("Connected")
+    return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text("Connected"),
+            ElevatedButton.icon(
+                icon: const Icon(Icons.bluetooth),
+                onPressed: () {
+                  bioData.disconnectFromDevice();
+                },
+                label: const Text("Disconnect")),
+          ],
+        )
     );
   }
 }

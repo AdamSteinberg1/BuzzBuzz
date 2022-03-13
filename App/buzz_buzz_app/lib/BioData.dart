@@ -64,7 +64,10 @@ class BioData {
       });
     }
   }
-  
+
+  void disconnectFromDevice() {
+    _device?.disconnect();
+  }
 
   void _setDevice(BluetoothDevice device) {
     _device = device;
