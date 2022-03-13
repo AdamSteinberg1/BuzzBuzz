@@ -39,6 +39,7 @@ class BioData {
 
     //start listener to is connected stream
     _isConnectedController.stream.listen(isConnectedListener);
+    _touchStreamController.stream.listen((event)=>print("touched = $event"));
   }
 
   void isConnectedListener(bool event) {
@@ -92,19 +93,21 @@ class BioData {
         switch(characteristic.uuid.toString()) {
           case _heartCharacteristicUUID: {
             _heartCharacteristic = characteristic;
-            _heartCharacteristic!.setNotifyValue(true);
           }
           break;
           case _touchCharacteristicUUID: {
             _touchCharacteristic = characteristic;
-            _touchCharacteristic!.setNotifyValue(true);
           }
           break;
           case _motorCharacteristicUUID: {
             _motorCharacteristic = characteristic;
           }
+          break;
         }
       }
+
+      _heartCharacteristic!.setNotifyValue(true);
+      _touchCharacteristic!.setNotifyValue(true);
 
       _heartrateStreamController.sink.addStream(
           _heartCharacteristic!.value.map((data) {
@@ -113,11 +116,10 @@ class BioData {
       );
 
       _touchStreamController.sink.addStream(
-          _touchCharacteristic!.value.asBroadcastStream().map((data) {
+          _touchCharacteristic!.value.map((data) {
             return data.any((element) => element!=0);
           })
       );
-
     });
   }
 
@@ -134,6 +136,9 @@ class BioData {
     if(mode < 0 || mode > 3) {
       return;
     }
-    _motorCharacteristic?.write(<int>[0,0,0,mode]);
+    _motorCharacteristic?.write(<int>[mode,0,0,0], withoutResponse: false).then((_) {
+      print("Wrote $mode");
+      _motorCharacteristic?.read().then((value) => print("mode = $value"));
+    });
   }
 }

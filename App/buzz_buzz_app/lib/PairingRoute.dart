@@ -70,9 +70,9 @@ class Connected extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Connected"),
+            const Text("Connected"),
             ElevatedButton.icon(
-                icon: const Icon(Icons.bluetooth),
+                icon: const Icon(Icons.bluetooth_disabled),
                 onPressed: () {
                   bioData.disconnectFromDevice();
                 },
@@ -101,7 +101,7 @@ class _NotConnectedState extends State<NotConnected> {
           children: <Widget>[
             const Text("Not Connected"),
             ElevatedButton.icon(
-              icon: const Icon(Icons.bluetooth),
+              icon: const Icon(Icons.bluetooth_searching),
                 onPressed: () {
                   setState(() {
                     tryingToConnect = true;
@@ -109,8 +109,11 @@ class _NotConnectedState extends State<NotConnected> {
                   bioData.connectToDevice();
                 },
                 label: const Text("Connect")),
-            if(tryingToConnect)
-              const CircularProgressIndicator()
+            SizedBox(
+                child: tryingToConnect ? const CircularProgressIndicator() : null,
+                height: 30.0,
+                width: 30.0
+            ),
           ]
       ),
     );
