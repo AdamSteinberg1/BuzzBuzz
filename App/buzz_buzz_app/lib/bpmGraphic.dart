@@ -112,8 +112,8 @@ class _bpmGraphic extends State<bpmGraphic>{
           initialData: bioData.currentlyConnected(),
           stream: bioData.deviceConnected(),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.data ?? false) {
-              return StreamBuilder<double>(
+            final bool connected = snapshot.data ?? false;
+            return StreamBuilder<double>(
                 stream: bioData.heartRateStream(),
                 builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
                   double bpm = snapshot.data ?? 0.0;
@@ -142,10 +142,12 @@ class _bpmGraphic extends State<bpmGraphic>{
                             ],
                             annotations: <GaugeAnnotation>[
                               GaugeAnnotation(
-                                widget: Text(bpm.toStringAsFixed(2),
+                                widget: connected ? Text(bpm.toStringAsFixed(2),
                                     style: TextStyle(color: bpmTextColor,
                                         fontSize: 40,
-                                        fontWeight: FontWeight.bold)),
+                                        fontWeight: FontWeight.bold)
+                                )
+                                : const Icon(Icons.bluetooth_disabled),
                                 //horizontalAlignment: GaugeAlignment.near,
                                 verticalAlignment: GaugeAlignment.center,
                                 positionFactor: .15,
@@ -157,11 +159,6 @@ class _bpmGraphic extends State<bpmGraphic>{
                   );
                 },
               );
-            } else {
-              return const Expanded(
-                  child: Icon(Icons.bluetooth_disabled)
-              );
-            }
           }
         )
     );

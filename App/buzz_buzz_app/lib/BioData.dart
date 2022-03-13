@@ -18,6 +18,9 @@ class BioData {
 
   final StreamController<bool> _isConnectedController = StreamController.broadcast();
   bool _isConnected = false;
+  final StreamController<double> _heartrateStreamController = StreamController.broadcast();
+  final StreamController<bool> _touchStreamController = StreamController.broadcast();
+
 
   BioData() {
 
@@ -28,6 +31,7 @@ class BioData {
           if(services.any((element) => element.uuid.toString() == _serviceUUID)) {
             _isConnectedController.sink.add(true);
             _setDevice(device);
+            _setupCharacteristics();
           }
         });
       }
@@ -48,13 +52,19 @@ class BioData {
           .first
           .then((value) {
         _setDevice(value.device);
-        _device!.connect();
+        _device!.connect().then((_) {
+          _setupCharacteristics();
+        });
+        ;
         FlutterBluePlus.instance.stopScan();
       });
     } else {
-      _device?.connect();
+      _device?.connect().then((_) {
+        _setupCharacteristics();
+      });
     }
   }
+  
 
   void _setDevice(BluetoothDevice device) {
     _device = device;
@@ -62,7 +72,6 @@ class BioData {
         _device!.state
             .map((state) => state == BluetoothDeviceState.connected)
     );
-    _setupCharacteristics();
   }
 
   Stream<bool> deviceConnected() {
@@ -93,25 +102,29 @@ class BioData {
           }
         }
       }
+
+      _heartrateStreamController.sink.addStream(
+          _heartCharacteristic!.value.map((data) {
+            return ByteData.sublistView(Uint8List.fromList(data)).getFloat32(0, Endian.little);
+          })
+      );
+
+      _touchStreamController.sink.addStream(
+          _touchCharacteristic!.value.asBroadcastStream().map((data) {
+            return data.any((element) => element!=0);
+          })
+      );
+
     });
   }
 
 
-  Stream<double>? heartRateStream() {
-    return _heartCharacteristic?.value.asBroadcastStream().map((data) {
-      return ByteData.sublistView(Uint8List.fromList(data)).getFloat32(0, Endian.little);
-    });
+  Stream<double> heartRateStream() {
+    return _heartrateStreamController.stream;
   }
 
-  Stream<bool>? touchedStream() {
-    return _touchCharacteristic?.value.asBroadcastStream().map((data) {
-      for(int i in data) {
-        if(i != 0) {
-          return true;
-        }
-      }
-      return false;
-    });
+  Stream<bool> touchedStream() {
+    return _touchStreamController.stream;
   }
 
   void activateMotor(int mode) {
