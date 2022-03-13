@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-
+import 'Options.dart';
 
 
 class OptionsRoute extends StatefulWidget {
@@ -27,34 +25,12 @@ class _OptionsRoute extends State<OptionsRoute>{
     'Moderate intensity',
     'High intensity',
   ];*/
-  Future<String> getLocalPath() async{
-    var dir = await getApplicationDocumentsDirectory();
-    return dir.path;
-  }
 
-  Future<File> getLocalFile() async{
-    String path = await getLocalPath();
-    return File('$path/OptionsData.txt');
-  }
-
-  Future<File> writeOptions(String s) async{
-    File file = await getLocalFile();
-    return file.writeAsString(s);
-  }
-  Future<String> readOptions() async{
-    try{
-      final file= await getLocalFile();
-      String contents = await file.readAsString();
-      return contents;
-    }catch(e){
-      return "Null";
-    }
-  }
    //example of file read
   @override
   void initState() {
     super.initState();
-    readOptions().then((data){
+    Options.read().then((data){
       setState((){
         buzzModes.forEach((buzzmode) {
           if(data == buzzmode) {
@@ -94,7 +70,7 @@ class _OptionsRoute extends State<OptionsRoute>{
                 setState(() {
                   modeDropDown = newValue!;
                 });
-                writeOptions(modeDropDown);
+                Options.write(modeDropDown);
               },
             ),
             /*DropdownButton(
