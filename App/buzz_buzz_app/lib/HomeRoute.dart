@@ -1,3 +1,4 @@
+import 'package:buzz_buzz_app/BuzzButton.dart';
 import 'package:flutter/material.dart';
 import 'package:buzz_buzz_app/TextSection.dart';
 import 'package:buzz_buzz_app/ColorBox.dart';
@@ -100,6 +101,7 @@ class HomeRoute extends StatelessWidget {
                   ),
                 ),
                ),
+            BuzzButton(),
             ],
           )),
     );
