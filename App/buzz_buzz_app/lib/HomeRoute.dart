@@ -55,7 +55,7 @@ class HomeRoute extends StatelessWidget {
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.all(16.0),
                           primary: Colors.white,
-                          textStyle: const TextStyle(fontSize: 16),
+                          textStyle: const TextStyle(fontSize: 14),
                         ),
                         onPressed: () {
                           Navigator.pushNamed(context, '/b');
@@ -89,7 +89,7 @@ class HomeRoute extends StatelessWidget {
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.all(16.0),
                           primary: Colors.white,
-                          textStyle: const TextStyle(fontSize: 16),
+                          textStyle: const TextStyle(fontSize: 14),
                         ),
                         onPressed: () {
                           Navigator.pushNamed(context, '/d');

@@ -30,24 +30,36 @@ class _waterCup extends State<waterCup> with SingleTickerProviderStateMixin{
         Stack(
           alignment: Alignment.bottomCenter,
           children: <Widget>[
-            /*Container(
-              width: 250,
-              height: _animation.value,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.blue,
-              )
-            ),*/
             Trapezoid(
               cutLength: 25.0,
               edge: Edge.BOTTOM,
               clipShadows: [ClipShadow(color: Colors.black54)],
+              child: Container(
+                color: Colors.black,
+                width: 253.0,
+                height: 252,
+              ),
+            ),
+            Trapezoid(
+              cutLength: 25.0,
+              edge: Edge.BOTTOM,
+              clipShadows: [ClipShadow(color: Colors.black54)],
+              child: Container(
+                color: Colors.white,
+                width: 250.0,
+                height: 250,
+              ),
+            ),
+            Trapezoid(
+                cutLength: 25.0,
+                edge: Edge.BOTTOM,
+                clipShadows: [ClipShadow(color: Colors.black54)],
                 child: Container(
                   color: Colors.blue,
                   width: 250.0,
                   height: _animation.value,
                 ),
-            ),
+              ),
             GestureDetector(
               onTap:() {
                 if(_animationController.isCompleted){
@@ -63,7 +75,7 @@ class _waterCup extends State<waterCup> with SingleTickerProviderStateMixin{
                 width: 250,
                 height:250,
                 child: Center(
-                  child:Text(breath, style: TextStyle(fontSize: 45, color: Colors.white, fontWeight: FontWeight.w400),),
+                  child:Text(breath, style: TextStyle(fontSize: 40, color: Colors.black26, fontWeight: FontWeight.w400),),
 
                 ),
                 decoration: BoxDecoration(
