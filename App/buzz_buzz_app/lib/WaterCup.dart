@@ -51,7 +51,7 @@ class _waterCup extends State<waterCup> with SingleTickerProviderStateMixin{
               ),
             ),
             Trapezoid(
-                cutLength: 25.0,
+                cutLength: 25,
                 edge: Edge.BOTTOM,
                 clipShadows: [ClipShadow(color: Colors.black54)],
                 child: Container(
