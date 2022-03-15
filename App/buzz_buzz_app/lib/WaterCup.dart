@@ -13,7 +13,7 @@ class _waterCup extends State<waterCup> with SingleTickerProviderStateMixin{
   String breath="Breathe in";
   @override
   void initState() {
-    _animationController = AnimationController(vsync: this,duration: Duration(milliseconds:2000));
+    _animationController = AnimationController(vsync: this,duration: Duration(milliseconds:3500));
     _curve = CurvedAnimation(parent: _animationController, curve:Curves.easeInOutCubic);
     _animation = Tween(begin:0.0, end:250.0).animate(_curve)..addListener(() {
       setState(() {
