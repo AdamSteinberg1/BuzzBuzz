@@ -10,6 +10,7 @@ final bioData = BioData();
 
 void main() {
   runApp(MaterialApp(
+    theme: new ThemeData(scaffoldBackgroundColor: Colors.white),
     initialRoute: '/',
     routes: {
       '/': (context) => HomeRoute(),

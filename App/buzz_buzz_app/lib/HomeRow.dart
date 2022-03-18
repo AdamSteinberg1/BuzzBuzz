@@ -18,7 +18,7 @@ class _HomeRow extends State<HomeRow> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.all(20),
+            margin: EdgeInsets.all(22),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: Stack(
@@ -40,7 +40,7 @@ class _HomeRow extends State<HomeRow> {
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.all(16.0),
                       primary: Colors.white,
-                      textStyle: const TextStyle(fontSize: 16),
+                      textStyle: const TextStyle(fontSize: 14),
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, '/e');
@@ -51,7 +51,7 @@ class _HomeRow extends State<HomeRow> {
               ),
             ),
           ),
-          SizedBox(width:20.0),
+          //SizedBox(width:10.0),
           Column(
             children: [
               Text('Do Not Disturb'),
