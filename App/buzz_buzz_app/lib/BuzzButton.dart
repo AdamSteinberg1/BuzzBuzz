@@ -1,6 +1,8 @@
 import 'package:buzz_buzz_app/main.dart';
 import 'package:flutter/material.dart';
 
+import 'Options.dart';
+
 class BuzzButton extends StatefulWidget {
   const BuzzButton({Key? key}) : super(key: key);
 
@@ -38,11 +40,11 @@ class _BuzzButtonState extends State<BuzzButton> {
                 primary: Colors.white,
                 textStyle: const TextStyle(fontSize: 16),
               ),
-              onPressed: () {
+              onPressed: () async {
                 if(_buzzing) {
                   bioData.activateMotor(0);
                 } else {
-                  bioData.activateMotor(1); //TODO read settings for buzz mode
+                  bioData.activateMotor(await options.getBuzzMode());
                 }
                 setState(() {
                   _buzzing = !_buzzing;

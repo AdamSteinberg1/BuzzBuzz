@@ -1,4 +1,5 @@
-import 'package:buzz_buzz_app/BioData.dart';
+import 'BioData.dart';
+import 'Options.dart';
 import 'package:flutter/material.dart';
 import 'HomeRoute.dart';
 import 'PairingRoute.dart';
@@ -7,6 +8,7 @@ import 'OptionsRoute.dart';
 import 'BreathingRoute.dart';
 
 final bioData = BioData();
+final options = Options();
 
 void main() {
   runApp(MaterialApp(
