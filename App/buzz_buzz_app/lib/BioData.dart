@@ -1,6 +1,8 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'dart:typed_data';
 
 
@@ -15,6 +17,8 @@ class BioData {
   BluetoothCharacteristic? _heartCharacteristic;
   BluetoothCharacteristic? _touchCharacteristic;
   BluetoothCharacteristic? _motorCharacteristic;
+
+  File? heartrateFile;
 
   final StreamController<bool> _isConnectedController = StreamController.broadcast();
   bool _isConnected = false;
@@ -39,11 +43,38 @@ class BioData {
 
     //start listener to is connected stream
     _isConnectedController.stream.listen(isConnectedListener);
+    _heartrateStreamController.stream.listen(heartrateWriter);
     _touchStreamController.stream.listen((event)=>print("touched = $event"));
+
+    getApplicationDocumentsDirectory().then((dir) {
+      heartrateFile = File('${dir.path}/heartrate.csv');
+    });
   }
 
   void isConnectedListener(bool event) {
     _isConnected=event;
+  }
+
+  heartrateWriter(double heartrate) async {
+    if(heartrateFile==null) {
+      Directory dir = await getApplicationDocumentsDirectory();
+      heartrateFile = File('${dir.path}/heartrate.csv');
+    }
+
+    var timestamp = DateTime.now().millisecondsSinceEpoch;
+    heartrateFile!.writeAsString("$heartrate,$timestamp\n", mode: FileMode.append).then((_){
+      print("Wrote: $heartrate,$timestamp");
+    });
+
+  }
+
+  void exportData() async {
+    if(heartrateFile == null){
+      print("Error: No file to export");
+      return;
+    }
+    final params = SaveFileDialogParams(sourceFilePath: heartrateFile!.path);
+    FlutterFileDialog.saveFile(params: params);
   }
 
   void connectToDevice() {
@@ -56,7 +87,6 @@ class BioData {
         _device!.connect().then((_) {
           _setupCharacteristics();
         });
-        ;
         FlutterBluePlus.instance.stopScan();
       });
     } else {

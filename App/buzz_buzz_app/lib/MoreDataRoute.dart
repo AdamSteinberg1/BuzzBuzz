@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:buzz_buzz_app/TextSection.dart';
 import 'package:buzz_buzz_app/ColorBox.dart';
+import 'package:buzz_buzz_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'textSection.dart';
@@ -31,7 +32,12 @@ class MoreDataRoute extends StatelessWidget {
           SizedBox(height: 10),
           TextSection('Detected Anxiety This Week'),
           ColorBox('Insert Graph', Colors.blue),
-          ElevatedButton(
+        ElevatedButton(
+          onPressed: bioData.exportData,
+          child: const Text("Export Data"),
+        ),
+
+        ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
             },

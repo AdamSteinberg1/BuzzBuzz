@@ -1,8 +1,6 @@
 import 'package:buzz_buzz_app/main.dart';
 import 'package:flutter/material.dart';
 
-import 'Options.dart';
-
 class BuzzButton extends StatefulWidget {
   const BuzzButton({Key? key}) : super(key: key);
 
