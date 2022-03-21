@@ -61,10 +61,9 @@ class BioData {
       heartrateFile = File('${dir.path}/heartrate.csv');
     }
 
-    var timestamp = DateTime.now().millisecondsSinceEpoch;
-    heartrateFile!.writeAsString("$heartrate,$timestamp\n", mode: FileMode.append).then((_){
-      print("Wrote: $heartrate,$timestamp");
-    });
+    var timestamp = DateTime.now();
+    var timestamp_millis = timestamp.millisecondsSinceEpoch;
+    heartrateFile!.writeAsString("$heartrate,$timestamp,$timestamp_millis\n", mode: FileMode.append);
 
   }
 
