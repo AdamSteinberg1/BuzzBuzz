@@ -10,7 +10,7 @@
 //pins
 #define TOUCH_PIN D2  //capacitive touch sensor
 #define MOTOR_PIN D7  //vibrator
-#define HEART_PIN A2  //heart rate sensor
+#define HEART_PIN A0  //heart rate sensor
 
 //BLE UUIDs
 #define SERVICE_UUID "c747d8bf-7ebb-4496-849c-423df0faa334"
