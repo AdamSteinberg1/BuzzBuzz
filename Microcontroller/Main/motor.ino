@@ -17,7 +17,7 @@ void heartbeatVibrate(float bpm)
   static const int n = sizeof(heartbeat)/sizeof(heartbeat[0]);
   const int period = 60000.0f/(n*bpm); //milliseconds
   static int i = 0;
-  ledcAnalogWrite(LEDC_CHANNEL_0, heartbeat[i]);
+  ledcAnalogWrite(LEDC_CHANNEL_0, heartbeat[i]*0.7);
   vTaskDelay(period / portTICK_PERIOD_MS);
   i=(i+1)%n;
 }
@@ -52,8 +52,8 @@ void decHeartbeat(void * parameter)
   const float rate = 1.0f; //amount for bpm to decrease by per second
   
   //last read heart rate
-  float hr = *((float*)heartCharacteristic->getData());
-
+  //float hr = *((float*)heartCharacteristic->getData());
+  float hr = 80.0f;
   for(;;)
   {
     auto start = millis();

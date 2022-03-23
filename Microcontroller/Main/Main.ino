@@ -8,8 +8,8 @@
 
 
 //pins
-#define TOUCH_PIN D3  //capacitive touch sensor
-#define MOTOR_PIN D2  //vibrator
+#define TOUCH_PIN D2  //capacitive touch sensor
+#define MOTOR_PIN D7  //vibrator
 #define HEART_PIN A0  //heart rate sensor
 
 //BLE UUIDs

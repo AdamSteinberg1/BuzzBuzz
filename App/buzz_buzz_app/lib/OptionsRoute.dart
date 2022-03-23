@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-
+import 'Options.dart';
+import 'main.dart';
 
 
 class OptionsRoute extends StatefulWidget {
@@ -11,57 +10,21 @@ class OptionsRoute extends StatefulWidget {
 }
 class _OptionsRoute extends State<OptionsRoute>{
 
-  // Initial Selected Values
-  static String modeDropDown = 'Buzz Mode';
-  //static String intensityDropDown = 'Buzz Intensity';
-  // List of items in our dropdown menu
-  var buzzModes = <String>[
-    'Buzz Mode',
-    'False Heart Rate Matched',
-    'False Heart Rate Gradual',
-    'Breathing Guide',
-  ];
-  /*var intensities = [
-    'Buzz Intensity',
-    'Low intensity',
-    'Moderate intensity',
-    'High intensity',
-  ];*/
-  Future<String> getLocalPath() async{
-    var dir = await getApplicationDocumentsDirectory();
-    return dir.path;
-  }
+  // Initial Selected Value
+  int modeDropDown = 0;
+  static const Map<int, String> modeNames = {
+    0 : 'Buzz Mode',
+    1 : 'False Heart Rate Matched',
+    2 : 'False Heart Rate Gradual',
+    3 : 'Breathing Guide',
+  };
 
-  Future<File> getLocalFile() async{
-    String path = await getLocalPath();
-    return File('$path/OptionsData.txt');
-  }
-
-  Future<File> writeOptions(String s) async{
-    File file = await getLocalFile();
-    return file.writeAsString(s);
-  }
-  Future<String> readOptions() async{
-    try{
-      final file= await getLocalFile();
-      String contents = await file.readAsString();
-      return contents;
-    }catch(e){
-      return "Null";
-    }
-  }
-   //example of file read
   @override
   void initState() {
     super.initState();
-    readOptions().then((data){
-      setState((){
-        buzzModes.forEach((buzzmode) {
-          if(data == buzzmode) {
-            modeDropDown = buzzmode;
-            print('Buzz mode read in');
-          }
-        });
+    options.getBuzzMode().then((value){
+      setState(() {
+        modeDropDown = value;
       });
     });
   }
@@ -76,48 +39,25 @@ class _OptionsRoute extends State<OptionsRoute>{
         child: Column(
           mainAxisAlignment:  MainAxisAlignment.center,
           children: [
-            DropdownButton(
+            DropdownButton<int>(
               //Initial Value
               value: modeDropDown,
               // Down Arrow Icon
               icon: const Icon(Icons.keyboard_arrow_down),
               // Array list of items
-              items: buzzModes.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+              items: modeNames.entries.map((e) => DropdownMenuItem(value:e.key, child: Text(e.value))).toList(),
               // After selecting the desired option,it will
               // change button value to selected value
-              onChanged: (String? newValue) {
-                setState(() {
-                  modeDropDown = newValue!;
-                });
-                writeOptions(modeDropDown);
+              onChanged: (int? newValue) {
+                if(newValue != null) {
+                  setState(() {
+                    modeDropDown = newValue;
+                    options.setBuzzMode(newValue);
+                  });
+                }
               },
             ),
-            /*DropdownButton(
-              // Initial Value
-              value: intensityDropDown,
-              // Down Arrow Icon
-              icon: const Icon(Icons.keyboard_arrow_down),
-              // Array list of items
-              items: intensities.map((String value) {
-                return DropdownMenuItem(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              // After selecting the desired option,it will
-              // change button value to selected value
-              onChanged: (String? newValue) {
-                setState(() {
-                  intensityDropDown = newValue!;
-                });
-              },
-            ), */
-            SizedBox(width:10,height:20),
+            const SizedBox(width:10,height:20),
             TextButton(
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.all(16.0),
