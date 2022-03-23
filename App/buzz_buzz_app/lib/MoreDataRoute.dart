@@ -37,12 +37,6 @@ class MoreDataRoute extends StatelessWidget {
           child: const Text("Export Data"),
         ),
 
-        ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('go home'),
-          ),
           ]
         ),
       ),

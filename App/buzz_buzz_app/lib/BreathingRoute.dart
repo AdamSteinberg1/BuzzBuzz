@@ -17,17 +17,6 @@ class BreathingRoute extends StatelessWidget {
             //waterBox(),
             waterCup(),
             SizedBox(width:10,height:20),
-            TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(16.0),
-                primary: Colors.blue,
-                textStyle: const TextStyle(fontSize: 16),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Go Home'),
-            ),
           ],
         ),
       ),
