@@ -95,7 +95,7 @@ class HomeRoute extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushNamed(context, '/d');
                         },
-                        child: const Text('Go to Options'),
+                        child: const Text('Options'),
                       ),
                     ],
                   ),

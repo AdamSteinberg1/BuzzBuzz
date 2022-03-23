@@ -14,7 +14,10 @@ class PairingRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<BluetoothState>(
+        appBar: AppBar(
+      title: const Text('Guided Breathing'),
+        ),
+        body: StreamBuilder<BluetoothState>(
           stream: FlutterBluePlus.instance.state,
           initialData: BluetoothState.unknown,
           builder: (c, snapshot) {
