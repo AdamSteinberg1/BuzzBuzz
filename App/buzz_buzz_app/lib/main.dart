@@ -1,3 +1,5 @@
+import 'package:buzz_buzz_app/CalibrationRoute.dart';
+
 import 'BioData.dart';
 import 'Options.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ void main() {
       '/c': (context) => MoreDataRoute(),
       '/d': (context) => OptionsRoute(),
       '/e': (context) => BreathingRoute(),
+      '/f': (context) => CalibrationRoute(),
     },
   ));
 }

@@ -102,6 +102,15 @@ class HomeRoute extends StatelessWidget {
                 ),
                ),
             BuzzButton(),
+            TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/f');
+                },
+                child: const Text('Calibrate'),
+              ),
             ],
           )),
     );
