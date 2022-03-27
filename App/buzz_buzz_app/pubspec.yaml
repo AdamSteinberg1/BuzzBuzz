@@ -44,6 +44,7 @@ dependencies:
   flutter_blue_plus: ^1.1.2
   clippy_flutter: ^2.0.0-nullsafety.1
   flutter_file_dialog: ^2.3.0
+  shared_preferences: ^2.0.13
 
 dev_dependencies:
   flutter_test:

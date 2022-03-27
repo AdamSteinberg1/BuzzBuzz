@@ -1,3 +1,5 @@
+import 'package:buzz_buzz_app/CalibrationRoute.dart';
+
 import 'BioData.dart';
 import 'Options.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +14,15 @@ final options = Options();
 
 void main() {
   runApp(MaterialApp(
-    theme: new ThemeData(scaffoldBackgroundColor: Colors.white),
-    initialRoute: '/',
+    theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+    initialRoute: HomeRoute.routeName,
     routes: {
-      '/': (context) => HomeRoute(),
-      '/b': (context) => PairingRoute(),
-      '/c': (context) => MoreDataRoute(),
-      '/d': (context) => OptionsRoute(),
-      '/e': (context) => BreathingRoute(),
+      HomeRoute.routeName : (context) => const HomeRoute(),
+      PairingRoute.routeName : (context) => const PairingRoute(),
+      MoreDataRoute.routeName : (context) => const MoreDataRoute(),
+      OptionsRoute.routeName : (context) => const OptionsRoute(),
+      BreathingRoute.routeName : (context) => const BreathingRoute(),
+      CalibrationRoute.routeName : (context) => const CalibrationRoute(),
     },
   ));
 }

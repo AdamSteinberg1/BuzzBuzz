@@ -1,4 +1,5 @@
 
+import 'package:buzz_buzz_app/BreathingRoute.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rolling_switch/rolling_switch.dart';
@@ -43,7 +44,7 @@ class _HomeRow extends State<HomeRow> {
                       textStyle: const TextStyle(fontSize: 14),
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/e');
+                      Navigator.pushNamed(context, BreathingRoute.routeName);
                     },
                     child: const Text('Guided Breathing'),
                   ),

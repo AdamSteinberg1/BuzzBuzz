@@ -1,17 +1,10 @@
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Options {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   int? _buzzMode;
-  File? _buzzModeFile;
 
-  Options() {
-    _getBuzzModeFile().then((buzzModeFile) {
-      _buzzModeFile = buzzModeFile;
-      _readMode().then((buzzMode) => (_buzzMode = buzzMode));
-    });
-  }
+  Options();
 
   Future<int> getBuzzMode() {
     if (_buzzMode == null) {
@@ -23,21 +16,15 @@ class Options {
 
   void setBuzzMode(int mode) {
     _buzzMode = mode;
-    _writeMode(_buzzMode!);
-  }
-
-  Future<File> _getBuzzModeFile() async{
-    Directory dir = await getApplicationDocumentsDirectory();
-    return File('${dir.path}/OptionsData.txt');
+    _writeMode(mode);
   }
 
   void _writeMode(int mode) async{
-    _buzzModeFile ??= await _getBuzzModeFile();
-    _buzzModeFile!.writeAsString("$mode");
+    final SharedPreferences prefs = await _prefs;
+    prefs.setInt("buzzMode", mode);
   }
   Future<int> _readMode() async{
-    _buzzModeFile ??= await _getBuzzModeFile();
-    String contents = await _buzzModeFile!.readAsString();
-    return int.tryParse(contents) ?? 0;
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getInt("buzzMode") ?? 0;
   }
 }

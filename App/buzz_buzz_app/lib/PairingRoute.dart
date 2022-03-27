@@ -9,13 +9,14 @@ import 'dart:math';
 // BSD-style license that can be found in the LICENSE file.
 
 class PairingRoute extends StatelessWidget {
+  static const String routeName = "/pairing";
   const PairingRoute({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-      title: const Text('Guided Breathing'),
+      title: const Text('Pair Device'),
         ),
         body: StreamBuilder<BluetoothState>(
           stream: FlutterBluePlus.instance.state,

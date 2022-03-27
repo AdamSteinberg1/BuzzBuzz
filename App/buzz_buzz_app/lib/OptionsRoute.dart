@@ -4,6 +4,7 @@ import 'main.dart';
 
 
 class OptionsRoute extends StatefulWidget {
+  static const String routeName = "/options";
   const OptionsRoute({Key? key}) : super(key: key);
   @override
   _OptionsRoute createState() => _OptionsRoute();
