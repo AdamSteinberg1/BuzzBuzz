@@ -1,5 +1,5 @@
-#define motor_control D2
-#define touchpin D3 
+#define motor_control D7
+#define touchpin D2
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
    Serial.begin(115200);
