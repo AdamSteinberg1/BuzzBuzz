@@ -1,4 +1,8 @@
 import 'package:buzz_buzz_app/BuzzButton.dart';
+import 'package:buzz_buzz_app/CalibrationRoute.dart';
+import 'package:buzz_buzz_app/MoreDataRoute.dart';
+import 'package:buzz_buzz_app/OptionsRoute.dart';
+import 'package:buzz_buzz_app/PairingRoute.dart';
 import 'package:flutter/material.dart';
 import 'package:buzz_buzz_app/TextSection.dart';
 import 'package:buzz_buzz_app/ColorBox.dart';
@@ -6,6 +10,7 @@ import 'package:buzz_buzz_app/HomeRow.dart';
 import 'package:buzz_buzz_app/bpmGraphic.dart';
 
 class HomeRoute extends StatelessWidget {
+  static const String routeName = "/";
   const HomeRoute({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,7 @@ class HomeRoute extends StatelessWidget {
                   textStyle: const TextStyle(fontSize: 18),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/c');
+                  Navigator.pushNamed(context, MoreDataRoute.routeName);
                 },
                 child: const Text('See More Data'),
               ),
@@ -59,7 +64,7 @@ class HomeRoute extends StatelessWidget {
                           textStyle: const TextStyle(fontSize: 14),
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/b');
+                          Navigator.pushNamed(context, PairingRoute.routeName);
                         },
                         child: const Text('Pair Device'),
                       ),
@@ -93,7 +98,7 @@ class HomeRoute extends StatelessWidget {
                           textStyle: const TextStyle(fontSize: 14),
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/d');
+                          Navigator.pushNamed(context, OptionsRoute.routeName);
                         },
                         child: const Text('Options'),
                       ),
@@ -107,7 +112,7 @@ class HomeRoute extends StatelessWidget {
                   textStyle: const TextStyle(fontSize: 18),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/f');
+                  Navigator.pushNamed(context, CalibrationRoute.routeName);
                 },
                 child: const Text('Calibrate'),
               ),

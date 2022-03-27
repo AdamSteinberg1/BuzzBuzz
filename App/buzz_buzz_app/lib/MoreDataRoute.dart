@@ -3,10 +3,10 @@ import 'dart:ui';
 import 'package:buzz_buzz_app/TextSection.dart';
 import 'package:buzz_buzz_app/ColorBox.dart';
 import 'package:buzz_buzz_app/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 //import 'textSection.dart';
 class MoreDataRoute extends StatelessWidget {
+  static const String routeName = "/moreData";
   const MoreDataRoute({Key? key}) : super(key: key);
 
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:buzz_buzz_app/WaterCup.dart';
 import 'package:buzz_buzz_app/WaterBox.dart';
 class BreathingRoute extends StatelessWidget {
+  static const String routeName = "/breathing";
   const BreathingRoute({Key? key}) : super(key: key);
 
   @override

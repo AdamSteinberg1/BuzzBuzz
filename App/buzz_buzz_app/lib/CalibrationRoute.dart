@@ -1,7 +1,9 @@
+import 'package:buzz_buzz_app/PairingRoute.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 
 class CalibrationRoute extends StatelessWidget {
+  static const String routeName = "/calibration";
   const CalibrationRoute({Key? key}) : super(key: key);
 
   @override
@@ -51,7 +53,7 @@ class Disconnected extends StatelessWidget {
             TextButton(
               child: const Text('Pair Device'),
               onPressed: () {
-                Navigator.pushNamed(context, '/b');
+                Navigator.pushNamed(context, PairingRoute.routeName);
               },
             ),
           ],

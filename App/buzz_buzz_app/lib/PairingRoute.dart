@@ -9,6 +9,7 @@ import 'dart:math';
 // BSD-style license that can be found in the LICENSE file.
 
 class PairingRoute extends StatelessWidget {
+  static const String routeName = "/pairing";
   const PairingRoute({Key? key}) : super(key: key);
 
   @override

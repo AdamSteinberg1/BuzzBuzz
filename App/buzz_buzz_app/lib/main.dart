@@ -14,15 +14,15 @@ final options = Options();
 
 void main() {
   runApp(MaterialApp(
-    theme: new ThemeData(scaffoldBackgroundColor: Colors.white),
-    initialRoute: '/',
+    theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+    initialRoute: HomeRoute.routeName,
     routes: {
-      '/': (context) => HomeRoute(),
-      '/b': (context) => PairingRoute(),
-      '/c': (context) => MoreDataRoute(),
-      '/d': (context) => OptionsRoute(),
-      '/e': (context) => BreathingRoute(),
-      '/f': (context) => CalibrationRoute(),
+      HomeRoute.routeName : (context) => const HomeRoute(),
+      PairingRoute.routeName : (context) => const PairingRoute(),
+      MoreDataRoute.routeName : (context) => const MoreDataRoute(),
+      OptionsRoute.routeName : (context) => const OptionsRoute(),
+      BreathingRoute.routeName : (context) => const BreathingRoute(),
+      CalibrationRoute.routeName : (context) => const CalibrationRoute(),
     },
   ));
 }
