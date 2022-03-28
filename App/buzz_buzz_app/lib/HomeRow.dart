@@ -1,8 +1,7 @@
 
 import 'package:buzz_buzz_app/BreathingRoute.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:rolling_switch/rolling_switch.dart';
+import 'package:buzz_buzz_app/PairingRoute.dart';
 
 class HomeRow extends StatefulWidget {
   const HomeRow({Key? key}) : super(key: key);
@@ -19,7 +18,7 @@ class _HomeRow extends State<HomeRow> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.all(22),
+            margin: const EdgeInsets.all(10),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: Stack(
@@ -53,26 +52,40 @@ class _HomeRow extends State<HomeRow> {
             ),
           ),
           //SizedBox(width:10.0),
-          Column(
-            children: [
-              Text('Do Not Disturb'),
-              RollingSwitch.icon(
-                onChanged: (bool state) {
-                  print('turned ${(state) ? 'on' : 'off'}');
-                },
-                rollingInfoRight: const RollingIconInfo(
-                  icon: Icons.alarm_off,
-                  backgroundColor: Colors.lightBlue,
-                  text: Text('On'),
-                ),
-                rollingInfoLeft: const RollingIconInfo(
-                  icon: Icons.alarm,
-                  backgroundColor: Colors.grey,
-                  text: Text('Off'),
-                ),
+          Container(
+            margin: EdgeInsets.all(10),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xFF0D47A1),
+                            Color(0xFF1976D2),
+                            Color(0xFF42A5F5),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.all(16.0),
+                      primary: Colors.white,
+                      textStyle: const TextStyle(fontSize: 14),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, PairingRoute.routeName);
+                    },
+                    child: const Text('Pair Device'),
+                  ),
+                ],
               ),
-            ]
-          )
+            ),
+          ),
         ]
     );
   }

@@ -14,7 +14,7 @@ class _BuzzButtonState extends State<BuzzButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(15),
+      margin: EdgeInsets.all(10),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: Stack(
@@ -36,7 +36,7 @@ class _BuzzButtonState extends State<BuzzButton> {
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.all(16.0),
                 primary: Colors.white,
-                textStyle: const TextStyle(fontSize: 16),
+                textStyle: const TextStyle(fontSize: 14),
               ),
               onPressed: () async {
                 if(_buzzing) {
