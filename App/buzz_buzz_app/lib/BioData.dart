@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:buzz_buzz_app/main.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
@@ -25,6 +26,8 @@ class BioData {
   final StreamController<double> _heartrateStreamController = StreamController.broadcast();
   final StreamController<bool> _touchStreamController = StreamController.broadcast();
 
+  bool _buzzing = false;
+
 
   BioData() {
 
@@ -44,6 +47,7 @@ class BioData {
     //start listener to is connected stream
     _isConnectedController.stream.listen(isConnectedListener);
     _heartrateStreamController.stream.listen(heartrateWriter);
+    _heartrateStreamController.stream.listen(detectElevatedHeartrate);
     _touchStreamController.stream.listen((event)=>print("touched = $event"));
 
     getApplicationDocumentsDirectory().then((dir) {
@@ -55,7 +59,7 @@ class BioData {
     _isConnected=event;
   }
 
-  heartrateWriter(double heartrate) async {
+  void heartrateWriter(double heartrate) async {
     if(heartrateFile==null) {
       Directory dir = await getApplicationDocumentsDirectory();
       heartrateFile = File('${dir.path}/heartrate.csv');
@@ -65,6 +69,24 @@ class BioData {
     var timestamp_millis = timestamp.millisecondsSinceEpoch;
     heartrateFile!.writeAsString("$heartrate,$timestamp,$timestamp_millis\n", mode: FileMode.append);
 
+  }
+
+  void detectElevatedHeartrate(double heartrate) async {
+    const elevation = 7.6;
+    final restingHR = await options.getRestingHeartrate();
+    if(restingHR == null) {
+      return;
+    }
+    if(heartrate > restingHR + elevation) {
+      if(!_buzzing) {
+        int mode = await options.getBuzzMode();
+        activateMotor(mode);
+      }
+    } else {
+      if(_buzzing) {
+        activateMotor(0);
+      }
+    }
   }
 
   void exportData() async {
@@ -166,8 +188,7 @@ class BioData {
       return;
     }
     _motorCharacteristic?.write(<int>[mode,0,0,0], withoutResponse: false).then((_) {
-      print("Wrote $mode");
-      _motorCharacteristic?.read().then((value) => print("mode = $value"));
+      _buzzing = (mode != 0);
     });
   }
 }
