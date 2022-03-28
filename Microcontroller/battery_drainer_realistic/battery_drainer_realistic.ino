@@ -150,7 +150,6 @@ void loop()
   Serial.println("Off");
   digitalWrite(LED_BUILTIN, LOW);
   vTaskDelay(offTime*60*1000/portTICK_PERIOD_MS);
-  delay(5000);
   vTaskResume(currBuzzTask);
   Serial.println("On");
   digitalWrite(LED_BUILTIN, HIGH);
