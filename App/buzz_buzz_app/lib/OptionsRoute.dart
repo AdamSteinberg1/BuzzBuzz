@@ -117,6 +117,7 @@ class _OptionsRoute extends State<OptionsRoute>{
             constraints:BoxConstraints.expand(height: 50.0, width:MediaQuery.of(context).size.width),
             child:ElevatedButton(
                       style: TextButton.styleFrom(
+                        elevation: 10,
                         textStyle: const TextStyle(fontSize: 18),
                       ),
                       onPressed: () {
@@ -131,4 +132,3 @@ class _OptionsRoute extends State<OptionsRoute>{
     );
   } //Widget
 }
-
