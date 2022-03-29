@@ -1,0 +1,22 @@
+import csv
+import datetime
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import numpy as np
+
+
+def readData():
+    x=[]
+    y=[]
+    with open('HKQuantityTypeIdentifierHeartRate.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=';')
+        next(csv_reader)
+        next(csv_reader)
+        for row in csv_reader:
+            x.append(datetime.datetime.strptime(row[6], "%Y-%m-%d %H:%M:%S -0400"))
+            y.append(float(row[8]))
+    return x,y
+
+x,y=readData()
+plt.plot(x,y, ".r")
+plt.show()
