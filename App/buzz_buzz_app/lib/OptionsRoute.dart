@@ -43,72 +43,88 @@ class _OptionsRoute extends State<OptionsRoute>{
           mainAxisAlignment:  MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ConstrainedBox(
-              constraints:BoxConstraints.expand(height: 50.0, width:MediaQuery.of(context).size.width),
-              child:DropdownButton<int>(
-                isExpanded: true,
-                alignment: AlignmentDirectional.centerEnd,
-                //Initial Value
-                value: modeDropDown,
-                // Down Arrow Icon
-                icon: const Icon(Icons.keyboard_arrow_down),
-                // Array list of items
-                items: modeNames.entries.map((e) => DropdownMenuItem(value:e.key, child: Text(e.value))).toList(),
-                // After selecting the desired option,it will
-                // change button value to selected value
-                onChanged: (int? newValue) {
-                  if(newValue != null) {
-                    setState(() {
-                      modeDropDown = newValue;
-                      options.setBuzzMode(newValue);
-                    });
-                  }
-                },
+            Card(
+                elevation: 10,
+            child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: ConstrainedBox(
+                  constraints:BoxConstraints.expand(height: 50.0, width:MediaQuery.of(context).size.width),
+                  child:DropdownButton<int>(
+                    isExpanded: true,
+                    alignment: AlignmentDirectional.centerEnd,
+                    //Initial Value
+                    value: modeDropDown,
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    // Array list of items
+                    items: modeNames.entries.map((e) => DropdownMenuItem(value:e.key, child: Text(e.value))).toList(),
+                    // After selecting the desired option,it will
+                    // change button value to selected value
+                    onChanged: (int? newValue) {
+                      if(newValue != null) {
+                        setState(() {
+                          modeDropDown = newValue;
+                          options.setBuzzMode(newValue);
+                        });
+                      }
+                    },
+                  )
+                ),
               )
             ),
             const SizedBox(width:10,height:10),
-            ConstrainedBox(
-              constraints:BoxConstraints.expand(height: 50.0, width:MediaQuery.of(context).size.width),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text('Do Not Disturb', style: TextStyle(fontSize: 16)),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      padding: EdgeInsets.only(left:MediaQuery.of(context).size.width-235),
-                      child: Transform.scale(
-                          scale:.70,
-                          child: RollingSwitch.icon(
-                            onChanged: (bool state) {
-                              print('turned ${(state) ? 'on' : 'off'}');
-                            },
-                            rollingInfoRight: const RollingIconInfo(
-                              icon: Icons.alarm_off,
-                              backgroundColor: Colors.lightBlue,
-                              text: Text('On'),
-                            ),
-                            rollingInfoLeft: const RollingIconInfo(
-                              icon: Icons.alarm,
-                              backgroundColor: Colors.grey,
-                              text: Text('Off'),
-                            ),
-                          ),
-                        )
-                    ),
-                  ]
-              ),
+            Card(
+                elevation: 10,
+            child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: ConstrainedBox(
+                  constraints:BoxConstraints.expand(height: 50.0, width:MediaQuery.of(context).size.width),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Do Not Disturb', style: TextStyle(fontSize: 16)),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.only(left:MediaQuery.of(context).size.width-273),
+                          child: Transform.scale(
+                              scale:.70,
+                              child: RollingSwitch.icon(
+                                onChanged: (bool state) {
+                                  print('turned ${(state) ? 'on' : 'off'}');
+                                },
+                                rollingInfoRight: const RollingIconInfo(
+                                  icon: Icons.alarm_off,
+                                  backgroundColor: Colors.lightBlue,
+                                  text: Text('On'),
+                                ),
+                                rollingInfoLeft: const RollingIconInfo(
+                                  icon: Icons.alarm,
+                                  backgroundColor: Colors.grey,
+                                  text: Text('Off'),
+                                ),
+                              ),
+                            )
+                        ),
+                      ]
+                  ),
+                ),
+             )
             ),
             const SizedBox(width:10,height:20),
-            TextButton(
-              style: TextButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 18),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, CalibrationRoute.routeName);
-              },
-              child: const Text('Calibrate'),
-            ),
+
+            ConstrainedBox(
+            constraints:BoxConstraints.expand(height: 50.0, width:MediaQuery.of(context).size.width),
+            child:ElevatedButton(
+                      style: TextButton.styleFrom(
+                        textStyle: const TextStyle(fontSize: 18),
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, CalibrationRoute.routeName);
+                      },
+                      child: const Text('Calibrate'),
+                    ),
+            )
           ],
         ),
       ),
