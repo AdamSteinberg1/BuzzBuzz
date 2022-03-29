@@ -10,70 +10,115 @@ class breathCircle extends StatefulWidget {
   @override
   _breathCircle createState() => _breathCircle();
 }
-class _breathCircle extends State<breathCircle>{
-
-  final _colors = <Color>[Colors.lightBlue];
-  final _colorLengths = <double>[1];
-  Color bpmTextColor=Colors.blue;
+class _breathCircle extends State<breathCircle> with SingleTickerProviderStateMixin{
 
   late AnimationController _animationController;
   late Animation _animation;
   late Animation<double> _curve;
   String breath="Breathe in";
   @override
+  //4500 breathe out
   void initState() {
-    _animationController = AnimationController(vsync: this,duration: Duration(milliseconds:3500));
-    _curve = CurvedAnimation(parent: _animationController, curve:Curves.easeInOutCubic);
-    _animation = Tween(begin:0.0, end:250.0).animate(_curve)..addListener(() {
+    _animationController = AnimationController(vsync: this,duration: Duration(milliseconds:5200), reverseDuration: Duration(milliseconds:4500));
+    _curve = CurvedAnimation(parent: _animationController, curve:Curves.easeInOut);
+    _animation = Tween(begin:0.0, end:100.0).animate(_curve)..addListener(() {
       setState(() {
 
       });
     });
     super.initState();
+    _animationController.addListener(() {
+      setState(() {});
+    });
+
+    // Repeat the animation after finish
+    /*if(_animationController.isCompleted){
+      _animationController.reverse();
+      breath="Breathe out";
+    }
+    else{
+      _animationController.forward();
+      breath="Breathe in";
+    }*/
+    _animationController.repeat(reverse: true);
   }
+  bool createListener(){
+    /*_animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Animation completed
+        breath="Breathe out";
+      } else if (status == AnimationStatus.dismissed) {
+        // Reverse animation completed
+        breath="Breathe in";
+      }
+      return status;
+    });
+    return false;*/
+    bool complete=false;
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        complete = true;
+      }
+    }
+    );
+    return complete;
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: StreamBuilder<bool>(
-            initialData: bioData.currentlyConnected(),
-            stream: bioData.deviceConnected(),
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              final bool connected = snapshot.data ?? false;
-              return StreamBuilder<double>(
-                stream: bioData.heartRateStream(),
-                builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
-                  double bpm = snapshot.data ?? 0.0;
-                  return SfRadialGauge(
-                      axes: <RadialAxis>[
-                        RadialAxis(
-                          minimum: 0,
-                          maximum: 100,
-                          showLabels: false,
-                          showTicks: false,
-                          startAngle: 270,
-                          endAngle: 270,
-                          axisLineStyle: AxisLineStyle(
-                            thickness: 0.05,
-                            color: const Color.fromARGB(100, 0, 169, 181),
-                            thicknessUnit: GaugeSizeUnit.factor,
-                          ),
-                          pointers: <GaugePointer>[
-                            RangePointer(
-                              value: _animation.value,
-                              width: 0.95,
-                              pointerOffset: 0.05,
-                              sizeUnit: GaugeSizeUnit.factor,
-                            )
-                          ],
-                        )
-                      ]
-                  );
-                },
-              );
-            }
-        )
-    );
+    return Column(
+      children: [
+        Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[
+          SfRadialGauge(
+              axes: <RadialAxis>[
+                RadialAxis(
+                  minimum: 0,
+                  maximum: 100,
+                  showLabels: false,
+                  showTicks: false,
+                  startAngle: 270,
+                  endAngle: 270,
+                  axisLineStyle: const AxisLineStyle(
+                    thickness: 0.05,
+                    color: Color.fromARGB(100, 0, 169, 181),
+                    thicknessUnit: GaugeSizeUnit.factor,
+                  ),
+                  pointers: <GaugePointer>[
+                    RangePointer(
+                      value: _animation.value,
+                      width: 0.95,
+                      pointerOffset: 0.05,
+                      sizeUnit: GaugeSizeUnit.factor,
+                    )
+                  ],
+                )
+              ]
+            ),
+          Container(
+                  width: 330,
+                  height:330,
+                  child: Center(
+                    child:Text(
+                      createListener() ? "Breathe out" : "Breath in",
+                      //breath,
+                      style: TextStyle(fontSize: 42, color: Colors.black26, fontWeight: FontWeight.w400),
+                    ),
+
+                  ),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.transparent,
+                      //border: Border.all(color: Colors.black, width:3)
+                  )
+              )
+          ]
+          )
+        ]
+      );
   }
 
 }

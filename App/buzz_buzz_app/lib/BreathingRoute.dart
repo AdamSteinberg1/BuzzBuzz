@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:buzz_buzz_app/WaterCup.dart';
 import 'package:buzz_buzz_app/WaterBox.dart';
+import 'package:buzz_buzz_app/BreathCircle.dart';
 class BreathingRoute extends StatelessWidget {
   static const String routeName = "/breathing";
   const BreathingRoute({Key? key}) : super(key: key);
@@ -16,7 +17,8 @@ class BreathingRoute extends StatelessWidget {
           mainAxisAlignment:  MainAxisAlignment.center,
           children: [
             //waterBox(),
-            waterCup(),
+            //waterCup(),
+            breathCircle(),
             SizedBox(width:10,height:20),
           ],
         ),
