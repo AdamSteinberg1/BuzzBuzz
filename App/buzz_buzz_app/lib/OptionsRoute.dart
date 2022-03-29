@@ -40,8 +40,8 @@ class _OptionsRoute extends State<OptionsRoute>{
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment:  MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment:  MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Card(
                 elevation: 10,
