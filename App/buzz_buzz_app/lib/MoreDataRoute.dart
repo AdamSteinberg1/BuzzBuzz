@@ -4,7 +4,7 @@ import 'package:buzz_buzz_app/TextSection.dart';
 import 'package:buzz_buzz_app/ColorBox.dart';
 import 'package:buzz_buzz_app/main.dart';
 import 'package:flutter/material.dart';
-//import 'textSection.dart';
+
 class MoreDataRoute extends StatelessWidget {
   static const String routeName = "/moreData";
   const MoreDataRoute({Key? key}) : super(key: key);
@@ -15,30 +15,19 @@ class MoreDataRoute extends StatelessWidget {
       appBar: AppBar(
         title: const Text('More Data'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          //crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-          SizedBox(height: 10),
-          TextSection('Daily HR and Movement'),
-          ColorBox('Insert Graph', Colors.blueAccent),
-          SizedBox(height: 10),
-          TextSection('Anxiety Detected Today'),
-          ColorBox('Insert Graph', Colors.blueGrey),
-          SizedBox(height: 10),
-          TextSection('Weekly HR and Movement'),
-          ColorBox('Insert Graph', Colors.lightBlue),
-          SizedBox(height: 10),
-          TextSection('Detected Anxiety This Week'),
-          ColorBox('Insert Graph', Colors.blue),
-        ElevatedButton(
-          onPressed: bioData.exportData,
-          child: const Text("Export Data"),
-        ),
-
-          ]
-        ),
+      body: ListView(
+        children: [
+          Image.asset("assets/moreDataGraphs/HourlyHR.png"),
+          Image.asset("assets/moreDataGraphs/DailyHR.png"),
+          Image.asset("assets/moreDataGraphs/WeeklyHR.png"),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 50.0),
+            child: ElevatedButton(
+              onPressed: bioData.exportData,
+              child: const Text("Export Data"),
+            ),
+          ),
+        ],
       ),
     );
   }
