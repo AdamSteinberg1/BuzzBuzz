@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:buzz_buzz_app/main.dart';
 
 class breathCircle extends StatefulWidget {
   const breathCircle({Key? key}) : super(key: key);
@@ -44,6 +44,16 @@ class _breathCircle extends State<breathCircle> with SingleTickerProviderStateMi
       }
     });
 
+    //start buzzing
+    bioData.activateMotor(3);
+
+
+
+  }
+  @override
+  void dispose(){
+    bioData.activateMotor(0);
+    super.dispose();
   }
 
   @override
