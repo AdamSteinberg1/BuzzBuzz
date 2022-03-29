@@ -1,8 +1,5 @@
-import 'package:buzz_buzz_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class breathCircle extends StatefulWidget {
@@ -16,10 +13,10 @@ class _breathCircle extends State<breathCircle> with SingleTickerProviderStateMi
   late Animation _animation;
   late Animation<double> _curve;
   String breath="Breathe in";
+
   @override
-  //4500 breathe out
   void initState() {
-    _animationController = AnimationController(vsync: this,duration: Duration(milliseconds:5200), reverseDuration: Duration(milliseconds:4500));
+    _animationController = AnimationController(vsync: this,duration: const Duration(milliseconds:5200), reverseDuration: const Duration(milliseconds:4500));
     _curve = CurvedAnimation(parent: _animationController, curve:Curves.easeInOut);
     _animation = Tween(begin:0.0, end:100.0).animate(_curve)..addListener(() {
       setState(() {
@@ -30,41 +27,24 @@ class _breathCircle extends State<breathCircle> with SingleTickerProviderStateMi
     _animationController.addListener(() {
       setState(() {});
     });
-
-    // Repeat the animation after finish
-    /*if(_animationController.isCompleted){
-      _animationController.reverse();
-      breath="Breathe out";
-    }
-    else{
-      _animationController.forward();
-      breath="Breathe in";
-    }*/
-    _animationController.repeat(reverse: true);
-  }
-  bool createListener(){
-    /*_animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // Animation completed
-        breath="Breathe out";
-      } else if (status == AnimationStatus.dismissed) {
-        // Reverse animation completed
-        breath="Breathe in";
-      }
-      return status;
-    });
-    return false;*/
-    bool complete=false;
+    _animationController.forward();
     _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        complete = true;
+      if(status == AnimationStatus.completed) {
+        // custom code here
+        setState(() {
+          breath="Breathe out";
+        });
+        _animationController.reverse();
       }
-    }
-    );
-    return complete;
+      else if(status == AnimationStatus.dismissed) {
+        setState(() {
+          breath="Breathe in";
+        });
+        _animationController.forward();
+      }
+    });
 
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +70,7 @@ class _breathCircle extends State<breathCircle> with SingleTickerProviderStateMi
                   pointers: <GaugePointer>[
                     RangePointer(
                       value: _animation.value,
+                      color: Colors.lightBlueAccent,
                       width: 0.95,
                       pointerOffset: 0.05,
                       sizeUnit: GaugeSizeUnit.factor,
@@ -99,17 +80,16 @@ class _breathCircle extends State<breathCircle> with SingleTickerProviderStateMi
               ]
             ),
           Container(
-                  width: 330,
-                  height:330,
+                  width: 350,
+                  height:350,
                   child: Center(
                     child:Text(
-                      createListener() ? "Breathe out" : "Breath in",
-                      //breath,
-                      style: TextStyle(fontSize: 42, color: Colors.black26, fontWeight: FontWeight.w400),
+                      breath,
+                      style: const TextStyle(fontSize: 46, color: Colors.black26, fontWeight: FontWeight.w400),
                     ),
 
                   ),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.transparent,
                       //border: Border.all(color: Colors.black, width:3)
