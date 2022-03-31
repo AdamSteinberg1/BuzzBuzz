@@ -115,16 +115,19 @@ class _OptionsRoute extends State<OptionsRoute>{
 
             ConstrainedBox(
             constraints:BoxConstraints.expand(height: 50.0, width:MediaQuery.of(context).size.width),
-            child:ElevatedButton(
-                      style: TextButton.styleFrom(
-                        elevation: 10,
-                        textStyle: const TextStyle(fontSize: 18),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: ElevatedButton(
+                        style: TextButton.styleFrom(
+                          elevation: 10,
+                          textStyle: const TextStyle(fontSize: 18),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, CalibrationRoute.routeName);
+                        },
+                        child: const Text('Calibrate'),
                       ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, CalibrationRoute.routeName);
-                      },
-                      child: const Text('Calibrate'),
-                    ),
+            ),
             )
           ],
         ),
