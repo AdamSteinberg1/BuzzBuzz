@@ -2,6 +2,7 @@ import csv
 import datetime
 import matplotlib.pyplot as plt
 from matplotlib import *
+import numpy as np
 
 
 class Subject:
@@ -70,6 +71,107 @@ def graphCompareSensors(subjects: list[Subject]):
         plt.legend()
         plt.savefig(f"figures/hr_comp_{subject.num}.png")
 
+def averageAnxiety(subjects, buzzMode):
+    anxiety = {
+        'Before Video': [], 
+        'Beginning of Video': [], 
+        'overall ': [], 
+        'Near the end of Video': [], 
+        'Immediately after the video': [], 
+        'Three minutes after video': [], 
+    }
+
+    for subject in subjects:
+        for key in anxiety:
+            anxiety[key].append(subject.anxiety[buzzMode][key])
+
+    for key in anxiety:
+        anxiety[key] = (np.average(anxiety[key]), np.std(anxiety[key]))
+    
+    tmp=anxiety.copy()
+    anxiety = {
+        "Before the Video": tmp['Before Video'],
+        "Beginning of the Video": tmp['Beginning of Video'],
+        "Middle of the Video": tmp['overall '],
+        "Near End of the Video": tmp['Near the end of Video'],
+        "End of the Video": tmp['Immediately after the video'],
+        "Three Minutes After the Video": tmp['Three minutes after video'],
+    }
+
+    return anxiety
+
+def averageHeartrate(subjects, buzzMode):
+    heartrates = {
+        "Before the Video": [],
+        "Beginning of the Video": [],
+        "Middle of the Video": [],
+        "Near End of the Video": [],
+        "End of the Video": [],
+        "Three Minutes After the Video": [],
+    }
+
+    for subject in subjects:
+        with open('Tidy Data.csv') as csv_file:
+            csv_reader = csv.DictReader(csv_file, delimiter=',')
+            for row in csv_reader:
+                if int(row["Buzz Mode"]) == buzzMode and int(row["Subject Number"]) == subject.num:
+                    for key in heartrates:
+                        if row["Video Label"] == key:
+                            startTime = datetime.datetime.strptime(row["Start Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
+                            endTime = datetime.datetime.strptime(row["End Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
+                            samples = [sample for time, sample in subject.pulsoxHR if time >= startTime and time <= endTime]
+                            heartrates[key].append(np.average(samples))
+
+    for key in heartrates:
+        heartrates[key] = (np.average(heartrates[key]), np.std(heartrates[key]))
+
+    
+    return heartrates
+
+
+def graphAnxiety(subjects: list[Subject]):
+    for buzzMode in range(0,4):
+        anxiety = averageAnxiety(subjects, buzzMode)
+        heartrates = averageHeartrate(subjects, buzzMode)
+
+        y1std = {key: value[1] for key,value in anxiety.items()}
+        print(f"Buzz Mode {buzzMode} anxiety std:", y1std, "\n")
+
+        y2std = {key: value[1] for key,value in heartrates.items()}
+        print(f"Buzz Mode {buzzMode} heartrate std:", y2std, "\n")
+
+
+        plt.figure(figsize=(15, 4.8))
+        match buzzMode:
+            case 0:
+                plt.title("No Vibration")
+            case 1:
+                plt.title("False Heart Rate - Constant")
+            case 2:
+                plt.title("False Heart Rate - Gradual")
+            case 3:
+                plt.title("Guided Breathing")
+                
+        labels = anxiety.keys()
+        y1 = [avg for avg,std in anxiety.values()]
+        y2 = [avg for avg,std in heartrates.values()]
+      
+        x = np.arange(len(labels))
+        ax1 = plt.subplot(1,1,1)
+        w = 0.3
+        plt.xticks(x + w /2, labels)
+        plt.xlim(-0.5,6)
+        hr_bar = ax1.bar(x, y2, width=w, color='C0', align='center')
+        ax2 = ax1.twinx()
+        anxiety_bar = ax2.bar(x + w, y1, width=w, color = 'C1', align='center')
+        ax1.set_ylabel('Heart Rate')
+        ax2.set_ylabel('Anxiety')
+        plt.legend([hr_bar, anxiety_bar],['Heart Rate', 'Anxiety'], loc="best")
+        plt.savefig(f"figures/Anxiety Buzz Mode {buzzMode}")
+        
+
+
+
 subjects = [makeSubject(i) for i in range(1,7) if i != 3]
 subjects[1].buzzHR.append((datetime.datetime(hour=14, minute=39, year=2022, month=3, day=22), subjects[1].buzzHR[-1][1]))
 
@@ -79,5 +181,6 @@ rcParams['font.family']='sans-serif'
 rcParams['font.sans-serif']=['Arial']
 rcParams.update({'font.size': 12})
 
-graphCompareSensors(subjects)
+#graphCompareSensors(subjects)
+graphAnxiety(subjects)
 print("done")
