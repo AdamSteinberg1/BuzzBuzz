@@ -1,9 +1,11 @@
+from collections import defaultdict
 import csv
 import datetime
 from matplotlib import ticker
 import matplotlib.pyplot as plt
 from matplotlib import *
 import numpy as np
+import scipy.stats as stats
 
 class Subject:
   def __init__(self, pulsoxHR: list[tuple[datetime.datetime,float]], buzzHR: list[tuple[datetime.datetime,float]], anxiety, times, videos, num):
@@ -71,7 +73,7 @@ def graphCompareSensors(subjects: list[Subject]):
         plt.legend()
         plt.savefig(f"figures/hr_comp_{subject.num}.png")
 
-def averageAnxiety(subjects, buzzMode):
+def averageAnxiety(subjects, buzzMode, avg=True):
     anxiety = {
         'Before Video': [], 
         'Beginning of Video': [], 
@@ -84,9 +86,9 @@ def averageAnxiety(subjects, buzzMode):
     for subject in subjects:
         for key in anxiety:
             anxiety[key].append(subject.anxiety[buzzMode][key])
-
-    for key in anxiety:
-        anxiety[key] = (np.average(anxiety[key]), np.std(anxiety[key]))
+    if avg:
+        for key in anxiety:
+            anxiety[key] = (np.average(anxiety[key]), np.std(anxiety[key]))
     
     tmp=anxiety.copy()
     anxiety = {
@@ -100,7 +102,7 @@ def averageAnxiety(subjects, buzzMode):
 
     return anxiety
 
-def averageHeartrate(subjects, buzzMode):
+def averageHeartrate(subjects, buzzMode, avg=True):
     heartrates = {
         "Before the Video": [],
         "Beginning of the Video": [],
@@ -121,9 +123,9 @@ def averageHeartrate(subjects, buzzMode):
                             endTime = datetime.datetime.strptime(row["End Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
                             samples = [sample for time, sample in subject.pulsoxHR if time >= startTime and time <= endTime]
                             heartrates[key].append(np.average(samples))
-
-    for key in heartrates:
-        heartrates[key] = (np.average(heartrates[key]), np.std(heartrates[key]))
+    if avg:
+        for key in heartrates:
+            heartrates[key] = (np.average(heartrates[key]), np.std(heartrates[key]))
 
     
     return heartrates
@@ -177,31 +179,6 @@ def averageDuplicates(data: list[tuple[float, float]]):
     average_y_by_x = {k: sum(v)/len(v) for k, v in y_values_by_x.items()}
     return list(average_y_by_x.items())
 
-def averageHeartrate(subjects: list[Subject], buzzMode: int, video: int) -> tuple[list[int], list[float]]:
-    data = []
-    for subject in subjects:
-        with open('Tidy Data.csv', encoding='utf-8-sig') as csv_file:
-            csv_reader = csv.DictReader(csv_file, delimiter=',')
-            filtered: list[tuple[datetime.datetime, datetime.datetime]] = []
-            for row in csv_reader:
-                if int(row["Video Number"]) == video and int(row["Buzz Mode"]) == buzzMode and int(row["Subject Number"])==subject.num:
-                    startTime = datetime.datetime.strptime(row["Start Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
-                    endTime = datetime.datetime.strptime(row["End Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
-                    filtered.append((startTime,endTime))
-            if len(filtered) == 0:
-                continue
-            startTime = min([start for start,end in filtered])
-            endTime = max([end for start,end in filtered])
-            heartrates = [((time-startTime).total_seconds(), hr) for time,hr in subject.pulsoxHR if time>=startTime and time<=endTime]
-            data.extend(averageDuplicates(heartrates))
-    if(len(data)==0):
-        return [],[]
-    averaged = averageDuplicates(data)
-    averaged.sort()
-    x,y = [time for time,hr in averaged], [hr for time,hr in averaged]
-    return x,y
-
-
 
 def graphCompareBuzzModes(subjects: list[Subject]):
     buzzModes = ["No Vibration", "False Heart Rate - Constant", "False Heart Rate - Gradual", "Guided Breathing"]
@@ -232,8 +209,30 @@ def graphCompareBuzzModes(subjects: list[Subject]):
         plt.legend(loc="upper center", ncol=len(buzzModes))
         plt.savefig(f"figures/Subject {subject.num} Buzz Modes.png")
 
+def anovaAnxiety(subjects: list[Subject]):
+    anxieties= defaultdict(lambda: [])
+    heartrates= defaultdict(lambda: [])
+    for buzzMode in range(0,4):
+        for key,value in averageAnxiety(subjects, buzzMode, False).items():
+            anxieties[key].append(value)
+        for key,value in averageHeartrate(subjects, buzzMode, False).items():
+            heartrates[key].append(value)
+    
+    with open('anovaAnxiety.csv', mode='w',encoding='utf-8-sig') as csv_file:
+        csv_writer = csv.DictWriter(csv_file, ["Time Period", "p-Value", "Values"])
+        csv_writer.writeheader()
+        for key,item in anxieties.items():
+            _, pvalue = stats.f_oneway(*item)
+            csv_writer.writerow({"Time Period": key, "p-Value": pvalue, "Values": item})
 
-            
+    with open('anovaHR.csv', mode='w',encoding='utf-8-sig') as csv_file:
+        csv_writer = csv.DictWriter(csv_file, ["Time Period", "p-Value", "Values"])
+        csv_writer.writeheader()
+        for key,item in heartrates.items():
+            _, pvalue = stats.f_oneway(*item)
+            csv_writer.writerow({"Time Period": key, "p-Value": pvalue, "Values": item})
+
+
 
 
 subjects = [makeSubject(i) for i in range(1,7) if i != 3]
@@ -247,6 +246,7 @@ rcParams.update({'font.size': 12})
 
 #graphCompareSensors(subjects)
 #graphAnxiety(subjects)
-graphCompareBuzzModes(subjects)
+#graphCompareBuzzModes(subjects)
+anovaAnxiety(subjects)
 
 print("done")
