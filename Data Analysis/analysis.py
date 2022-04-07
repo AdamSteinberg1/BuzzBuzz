@@ -267,6 +267,7 @@ def subjectAnova(subjects: list[Subject]):
         csv_writer.writerows(anovaRows)
 
 def graphAnxietyBySubject(subjects: list[Subject]):
+    buzzModes = ["No Vibration", "False Heart Rate - Constant", "False Heart Rate - Gradual", "Guided Breathing"]
     labels = ["Before the Video", "Beginning of the Video", "Middle of the Video", "Near End of the Video", "End of the Video", "Three Minutes After the Video"]
     keys = ['Before Video', 'Beginning of Video', 'overall ', 'Near the end of Video', 'Immediately after the video', 'Three minutes after video']
     ticks = range(len(labels))
@@ -279,7 +280,7 @@ def graphAnxietyBySubject(subjects: list[Subject]):
         for buzzMode in range(4):
             y = [subject.anxiety[buzzMode][key] for key in keys]
             x = [tick + width*(buzzMode-2) for tick in ticks]
-            plt.bar(x, y, width=width, align="edge", label=f"Buzz Mode {buzzMode}")
+            plt.bar(x, y, width=width, align="edge", label=buzzModes[buzzMode])
         plt.legend()
         plt.savefig(f"figures/AnxietySubject{subject.num}")
         
@@ -298,9 +299,9 @@ rcParams.update({'font.size': 12})
 
 #graphCompareSensors(subjects)
 #graphAnxiety(subjects)
-graphCompareBuzzModes(subjects)
+#graphCompareBuzzModes(subjects)
 #anovaAnxiety(subjects)
 #subjectAnova(subjects)
-#graphAnxietyBySubject(subjects)
+graphAnxietyBySubject(subjects)
 
 print("done")
