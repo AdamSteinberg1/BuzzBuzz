@@ -280,7 +280,7 @@ def graphAnxietyBySubject(subjects: list[Subject]):
             x = [tick + width*(buzzMode-2) for tick in ticks]
             plt.bar(x, y, width=width, align="edge", label=f"Buzz Mode {buzzMode}")
         plt.legend()
-        plt.show()
+        plt.savefig(f"figures/AnxietySubject{subject.num}")
         
 
 
