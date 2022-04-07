@@ -200,6 +200,7 @@ def graphCompareBuzzModes(subjects: list[Subject]):
             heartrates = averageDuplicates(sorted([((time-startTime).total_seconds()/(endTime-startTime).total_seconds(), hr) for time,hr in subject.pulsoxHR if time>=startTime and time<=endTime]))
             x = [time for time,hr in heartrates]
             y = [hr for time,hr in heartrates]
+            print(f"{subject.num},{buzzMode},{np.average(y)}")
             plt.plot(x,y,label=buzzModes[buzzMode])
         plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter(xmax=1))
         plt.ylabel("Heart Rate (bpm)")
@@ -297,9 +298,9 @@ rcParams.update({'font.size': 12})
 
 #graphCompareSensors(subjects)
 #graphAnxiety(subjects)
-#graphCompareBuzzModes(subjects)
+graphCompareBuzzModes(subjects)
 #anovaAnxiety(subjects)
 #subjectAnova(subjects)
-graphAnxietyBySubject(subjects)
+#graphAnxietyBySubject(subjects)
 
 print("done")
