@@ -72,7 +72,7 @@ class _bpmGraphic extends State<bpmGraphic>{
         print("colors being filled");
         _colors.clear();
         _colors.add(Colors.blue);
-        if(bpm>40)
+        if(bpm>60)
         {
           _colors.add(Colors.green);
           _colorLengths.clear();
