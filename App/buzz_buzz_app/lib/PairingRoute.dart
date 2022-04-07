@@ -4,10 +4,6 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
 import 'dart:math';
 
-// Copyright 2017, Paul DeMarco.
-// All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
 class PairingRoute extends StatelessWidget {
   static const String routeName = "/pairing";
   const PairingRoute({Key? key}) : super(key: key);
@@ -15,10 +11,10 @@ class PairingRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-      title: const Text('Pair Device'),
-        ),
-        body: StreamBuilder<BluetoothState>(
+      appBar: AppBar(
+        title: const Text('Pair Device'),
+      ),
+      body: StreamBuilder<BluetoothState>(
           stream: FlutterBluePlus.instance.state,
           initialData: BluetoothState.unknown,
           builder: (c, snapshot) {
@@ -39,7 +35,6 @@ class BluetoothOffScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.lightBlue,
       body: Center(
@@ -72,18 +67,17 @@ class Connected extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text("Connected"),
-            ElevatedButton.icon(
-                icon: const Icon(Icons.bluetooth_disabled),
-                onPressed: () {
-                  bioData.disconnectFromDevice();
-                },
-                label: const Text("Disconnect")),
-          ],
-        )
-    );
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text("Connected"),
+        ElevatedButton.icon(
+            icon: const Icon(Icons.bluetooth_disabled),
+            onPressed: () {
+              bioData.disconnectFromDevice();
+            },
+            label: const Text("Disconnect")),
+      ],
+    ));
   }
 }
 
@@ -105,7 +99,7 @@ class _NotConnectedState extends State<NotConnected> {
           children: <Widget>[
             const Text("Not Connected"),
             ElevatedButton.icon(
-              icon: const Icon(Icons.bluetooth_searching),
+                icon: const Icon(Icons.bluetooth_searching),
                 onPressed: () {
                   setState(() {
                     tryingToConnect = true;
@@ -114,12 +108,11 @@ class _NotConnectedState extends State<NotConnected> {
                 },
                 label: const Text("Connect")),
             SizedBox(
-                child: tryingToConnect ? const CircularProgressIndicator() : null,
+                child:
+                    tryingToConnect ? const CircularProgressIndicator() : null,
                 height: 30.0,
-                width: 30.0
-            ),
-          ]
-      ),
+                width: 30.0),
+          ]),
     );
   }
 }
@@ -133,7 +126,7 @@ class BluetoothOnScreen extends StatelessWidget {
       stream: bioData.deviceConnected(),
       initialData: bioData.currentlyConnected(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if(snapshot.data ?? false) {
+        if (snapshot.data ?? false) {
           return const Connected();
         } else {
           return const NotConnected();
