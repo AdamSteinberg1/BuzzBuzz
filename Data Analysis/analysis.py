@@ -221,16 +221,53 @@ def anovaAnxiety(subjects: list[Subject]):
     with open('anovaAnxiety.csv', mode='w',encoding='utf-8-sig') as csv_file:
         csv_writer = csv.DictWriter(csv_file, ["Time Period", "p-Value", "Values"])
         csv_writer.writeheader()
-        for key,item in anxieties.items():
-            _, pvalue = stats.f_oneway(*item)
-            csv_writer.writerow({"Time Period": key, "p-Value": pvalue, "Values": item})
+        for key,value in anxieties.items():
+            _, pvalue = stats.f_oneway(*value)
+            csv_writer.writerow({"Time Period": key, "p-Value": pvalue, "Values": value})
 
     with open('anovaHR.csv', mode='w',encoding='utf-8-sig') as csv_file:
         csv_writer = csv.DictWriter(csv_file, ["Time Period", "p-Value", "Values"])
         csv_writer.writeheader()
-        for key,item in heartrates.items():
-            _, pvalue = stats.f_oneway(*item)
-            csv_writer.writerow({"Time Period": key, "p-Value": pvalue, "Values": item})
+        for key,value in heartrates.items():
+            _, pvalue = stats.f_oneway(*value)
+            csv_writer.writerow({"Time Period": key, "p-Value": pvalue, "Values": value})
+
+def subjectAnova(subjects: list[Subject]):
+
+    anovaRows=[]
+    tukeyRows=[]
+    for subject in subjects:
+        data=[]
+        for buzzMode in range(4):
+            filtered: list[tuple[datetime.datetime, datetime.datetime]] = []
+            with open('Tidy Data.csv', encoding='utf-8-sig') as csv_file:
+                csv_reader = csv.DictReader(csv_file, delimiter=',')
+                for row in csv_reader:
+                    if int(row["Buzz Mode"]) == buzzMode and int(row["Subject Number"])==subject.num:
+                        startTime = datetime.datetime.strptime(row["Start Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
+                        endTime = datetime.datetime.strptime(row["End Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
+                        filtered.append((startTime,endTime))
+            if len(filtered) == 0:
+                continue
+            startTime = min([start for start,end in filtered])
+            endTime = max([end for start,end in filtered])
+            heartrates = averageDuplicates(sorted([((time-startTime).total_seconds()/(endTime-startTime).total_seconds(), hr) for time,hr in subject.pulsoxHR if time>=startTime and time<=endTime]))
+            x = [time for time,hr in heartrates]
+            y = [hr for time,hr in heartrates]
+            data.append(y)
+        _, pvalue = stats.f_oneway(*data)
+        print(f"Subject {subject.num}")
+        print(stats.tukey_hsd(*data))
+        anovaRows.append({"Subject Number": subject.num, "p-Value": pvalue})
+
+    with open('anovaSubjects.csv', mode='w') as csv_file:
+        csv_writer = csv.DictWriter(csv_file, ["Subject Number","p-Value"])
+        csv_writer.writeheader()
+        csv_writer.writerows(anovaRows)
+
+
+
+        
 
 
 
@@ -248,5 +285,6 @@ rcParams.update({'font.size': 12})
 #graphAnxiety(subjects)
 #graphCompareBuzzModes(subjects)
 anovaAnxiety(subjects)
+subjectAnova(subjects)
 
 print("done")
