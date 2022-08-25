@@ -1,15 +1,14 @@
 import csv
 import datetime
+from matplotlib import ticker
 import matplotlib.pyplot as plt
 from matplotlib import *
 import numpy as np
 import scipy.stats as stats
 from scipy.stats import f_oneway
 
-
-
 class Subject:
-  def __init__(self, pulsoxHR, buzzHR, anxiety, times, videos, num):
+  def __init__(self, pulsoxHR: list[tuple[datetime.datetime,float]], buzzHR: list[tuple[datetime.datetime,float]], anxiety, times, videos, num):
     self.pulsoxHR = pulsoxHR
     self.buzzHR = buzzHR
     self.anxiety = anxiety
@@ -138,10 +137,10 @@ def graphAnxiety(subjects: list[Subject]):
         heartrates = averageHeartrate(subjects, buzzMode)
 
         y1std = {key: value[1] for key,value in anxiety.items()}
-        #print(f"Buzz Mode {buzzMode} anxiety std:", y1std, "\n")
+        print(f"Buzz Mode {buzzMode} anxiety std:", y1std, "\n")
 
         y2std = {key: value[1] for key,value in heartrates.items()}
-        #print(f"Buzz Mode {buzzMode} heartrate std:", y2std, "\n")
+        print(f"Buzz Mode {buzzMode} heartrate std:", y2std, "\n")
 
 
         plt.figure(figsize=(15, 4.8))
@@ -154,7 +153,6 @@ def graphAnxiety(subjects: list[Subject]):
                 plt.title("False Heart Rate - Gradual")
             case 3:
                 plt.title("Guided Breathing")
-                
                 
         labels = anxiety.keys()
         y1 = [avg for avg,std in anxiety.values()]
@@ -172,18 +170,76 @@ def graphAnxiety(subjects: list[Subject]):
         ax2.set_ylabel('Anxiety')
         plt.legend([hr_bar, anxiety_bar],['Heart Rate', 'Anxiety'], loc="best")
         plt.savefig(f"figures/Anxiety Buzz Mode {buzzMode}")
-        
 
-def Statistics(subjects: list[Subject])
-    for buzzMode in range(0,4):
-        anxiety = averageAnxiety(subjects, buzzMode)
-        heartrates = averageHeartrate(subjects, buzzMode)
+def averageDuplicates(data: list[tuple[float, float]]):
+    y_values_by_x = {}
+    for x, y in data:
+        y_values_by_x.setdefault(x, []).append(y)
+
+    average_y_by_x = {k: sum(v)/len(v) for k, v in y_values_by_x.items()}
+    return list(average_y_by_x.items())
+
+def averageHeartrate(subjects: list[Subject], buzzMode: int, video: int) -> tuple[list[int], list[float]]:
+    data = []
+    for subject in subjects:
+        with open('Tidy Data.csv', encoding='utf-8-sig') as csv_file:
+            csv_reader = csv.DictReader(csv_file, delimiter=',')
+            filtered: list[tuple[datetime.datetime, datetime.datetime]] = []
+            for row in csv_reader:
+                if int(row["Video Number"]) == video and int(row["Buzz Mode"]) == buzzMode and int(row["Subject Number"])==subject.num:
+                    startTime = datetime.datetime.strptime(row["Start Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
+                    endTime = datetime.datetime.strptime(row["End Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
+                    filtered.append((startTime,endTime))
+            if len(filtered) == 0:
+                continue
+            startTime = min([start for start,end in filtered])
+            endTime = max([end for start,end in filtered])
+            heartrates = [((time-startTime).total_seconds(), hr) for time,hr in subject.pulsoxHR if time>=startTime and time<=endTime]
+            data.extend(averageDuplicates(heartrates))
+    if(len(data)==0):
+        return [],[]
+    averaged = averageDuplicates(data)
+    averaged.sort()
+    x,y = [time for time,hr in averaged], [hr for time,hr in averaged]
+    return x,y
+
+
+
+def graphCompareBuzzModes(subjects: list[Subject]):
+    buzzModes = ["No Vibration", "False Heart Rate - Constant", "False Heart Rate - Gradual", "Guided Breathing"]
+    for subject in subjects:
+        plt.figure(figsize=(15, 4.8))
+        for buzzMode in range(4):
+            filtered: list[tuple[datetime.datetime, datetime.datetime]] = []
+            with open('Tidy Data.csv', encoding='utf-8-sig') as csv_file:
+                csv_reader = csv.DictReader(csv_file, delimiter=',')
+                for row in csv_reader:
+                    if int(row["Buzz Mode"]) == buzzMode and int(row["Subject Number"])==subject.num:
+                        startTime = datetime.datetime.strptime(row["Start Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
+                        endTime = datetime.datetime.strptime(row["End Time"] + " " + row["Date"], "%H:%M:%S %m/%d/%Y")
+                        filtered.append((startTime,endTime))
+            if len(filtered) == 0:
+                continue
+            startTime = min([start for start,end in filtered])
+            endTime = max([end for start,end in filtered])
+            heartrates = averageDuplicates(sorted([((time-startTime).total_seconds()/(endTime-startTime).total_seconds(), hr) for time,hr in subject.pulsoxHR if time>=startTime and time<=endTime]))
+            x = [time for time,hr in heartrates]
+            y = [hr for time,hr in heartrates]
+            plt.plot(x,y,label=buzzModes[buzzMode])
+        plt.gca().xaxis.set_major_formatter(ticker.PercentFormatter(xmax=1))
+        plt.ylabel("Heart Rate (bpm)")
+        plt.xlabel("Percentage of Video")
+        plt.title(f"Subject {subject.num}")
+        plt.ylim(top=plt.ylim()[1]*1.1)
+        plt.legend(loc="upper center", ncol=len(buzzModes))
+        plt.savefig(f"figures/Subject {subject.num} Buzz Modes.png")
+        
+        
+def statistics(subjects: list[Subject])
+    buzzModes = ["No Vibration", "False Heart Rate - Constant", "False Heart Rate - Gradual", "Guided Breathing"]
+    for subject in subjects:
         fvalue, pvalue = stats.f_oneway()
-                #BBBavg = np.mean(y1)
-        #poavg = np.mean(y2)
-        #percentdiff = (abs((BBBavg-poavg)/((BBBavg+poavg)/2)))*100
-        #print(f"subject {subject.num}", fvalue,pvalue, percentdiff)
-        print("anova results",fvalue,pvalue)
+        print(f"Subject {subject.num}",fvalue,pvalue)
 
 subjects = [makeSubject(i) for i in range(1,7) if i != 3]
 subjects[1].buzzHR.append((datetime.datetime(hour=14, minute=39, year=2022, month=3, day=22), subjects[1].buzzHR[-1][1]))
@@ -195,5 +251,7 @@ rcParams['font.sans-serif']=['Arial']
 rcParams.update({'font.size': 12})
 
 #graphCompareSensors(subjects)
-graphAnxiety(subjects)
+#graphAnxiety(subjects)
+graphCompareBuzzModes(subjects)
+
 print("done")
